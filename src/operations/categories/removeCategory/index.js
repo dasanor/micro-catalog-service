@@ -24,6 +24,16 @@ function opFactory(base) {
         .findOne({ _id: id })
         .then(category => {
           if (!category) throw (boom.notFound('Category not found'));
+          return base.db.models.Product
+            .find({ categories: category._id }, { _id: 1 })
+            .limit(1)
+            .exec()
+            .then(productsInThisCategory => {
+              if (productsInThisCategory[0]) throw boom.notAcceptable(`Category not empty`);
+              return category;
+            });
+        })
+        .then(category => {
           return category.remove();
         })
         .then(removedCategory => {
