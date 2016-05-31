@@ -29,7 +29,7 @@ function opFactory(base) {
       if (msg.parent) {
         parentSearch = { _id: msg.parent };
       } else {
-        parentSearch = { title: 'ROOT' };
+        parentSearch = { _id: 'ROOT' };
       }
       base.db.models.Category
         .findOne(parentSearch)
