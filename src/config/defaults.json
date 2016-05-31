@@ -1,0 +1,11 @@
+{
+  "services": {
+    "name": "catalog",
+    "version": "v1"
+  },
+  "models": {
+    "productModel": "./models/productModel",
+    "categoryModel": "./models/categoryModel"
+  },
+  "maxCategoriesPerProduct": 5
+}
