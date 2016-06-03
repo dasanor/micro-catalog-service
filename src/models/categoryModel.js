@@ -38,7 +38,7 @@ function modelFactory(base) {
     onDelete: 'REPARENT'
   });
 
-  schema.index({ slug: 1 }, { unique: true });
+  schema.index({ parent: 1, slug: 1 }, { unique: true });
 
   // Add the model to mongoose
   return base.db.model('Category', schema);
