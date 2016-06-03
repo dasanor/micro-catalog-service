@@ -1,0 +1,44 @@
+## Category (object)
++ id:SJlkcsaQ (required, string) - Unique Category identifier.
++ parent:S1_B6X97 (required, string) - The parent Category id. 'ROOT' is the root category.
++ title:Category 01 (required, string) - The Category title.
++ description:This is the Category 01 (required, string) - The Category description.
++ slug:cat01 (required, string) - The Category slug to use in paths. Parent+slug must be unique.
++ level:2 (required, number) - The Category level in the hierarchy.
+
+## CategoryRequest (object)
++ title:Category 01 (required, string) - The Category title.
++ description:This is the Category 01 (required, string) - The Category description.
++ slug:cat01 (required, string) - The Category slug to use in paths. Parent+slug must be unique.
++ parent:S1_B6X97 (required, string) - The parent Category id. 'ROOT' is the root category.
+
+## Media (object)
++ id:100x100 (required, string) - The Media id
++ url:http://placehold.it/100x100 (required, string) - The Media url
+
+## Product (object)
++ id:0001 (required, string) - Unique Product identifier (sku).
++ status:ONLINE,DRAFT (required, enum[string]) - The status of the product from [ONLINE|DRAFT]. Default: 'DRAFT'.
++ title:Product 0001 (required, string) - The Product title.
++ description:This is the Product 0001 (required, string) - The Product description.
++ price:99.99 (required, number) - The Product price.
++ sale_price:79.99 (optional, number) - The Product sale price.
++ categories:SJlkcsaQ (optional, array[string]) - The Product categories.
++ medias (optional, array[Media]) - The Product medias.
+
+## CreateProductRequest (Product)
+
+## UpdateProductRequest (object)
++ status:ONLINE,DRAFT (required, enum[string]) - The status of the product from [ONLINE|DRAFT]. Default: 'DRAFT'.
++ title:Product 0001 (required, string) - The Product title.
++ description:This is the Product 0001 (required, string) - The Product description.
++ price:99.99 (required, number) - The Product price.
++ sale_price:79.99 (optional, number) - The Product sale price.
++ categories:SJlkcsaQ (optional, array[string]) - The Product categories.
++ medias (optional, array[Media]) - The Product medias.
+
+## CategoryTree (array[CategoryTreeEntry])
+
+## CategoryTreeEntry (object)
++ id:0001 (required, string) - Unique Product identifier.
++ title:Product 0001 (required, string) - The Product title.

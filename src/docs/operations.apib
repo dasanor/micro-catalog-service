@@ -1,0 +1,296 @@
+Operations with the `Category` and `Product` entities
+
+All operations must contain the appropriate `authorization` token:
+  
+```bash
+--header 'authorization: Bearer xxxxx...'
+```
+
+And the `accept` and `content-type` headers:
+ 
+```bash
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+
+
+
+
+## Category [/services/catalog/v1/category]
+
+### Category Create [POST]
+
+Creates a Category record.
+
+::: note
+Example
+```bash
+curl --request POST \
+  --url http://localhost:3000/services/catalog/v1/category \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{"title": "Category 02", "description": "This is the Category 02",
+           "slug": "category02", "parent": "S1_B6X97"}'
+```
+:::
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
+    + Attributes (CategoryRequest)
+
++ Response 201 (application/json)
+
+  + Attributes (Category)
+
+## Category [/services/catalog/v1/category/{categoryId}]
+
++ Parameters
+
+    + categoryId: `SJlkcsaQ` (string, required) - The Category id
+
+### Get [GET]
+
+::: note
+Example
+```bash
+  --url http://localhost:3000/services/catalog/v1/category/SJlkcsaQ \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+:::
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
++ Response 200 (application/json)
+
+  + Attributes (Category)
+
+### Remove [DELETE]
+
+Removes a Category. Not possible if it contains products.
+
+If the Category has childrens, they are re-parented to this Category parent.
+
+::: note
+Example
+```bash
+curl --request DELETE \
+  --url http://localhost:3000/services/catalog/v1/category/SJlkcsaQ \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+:::
+
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
++ Response 204 (application/json)
+
+### Update [PUT]
+
+Updates a Category.
+
+::: note
+Example
+```bash
+curl --request PUT \
+  --url http://localhost:3000/services/catalog/v1/category/SJlkcsaQ \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+  --data '{"title": "Modified category title"}'
+```
+:::
+
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
+    + Attributes (CategoryRequest)
+    
++ Response 204 (application/json)
+
+
+
+
+
+## Category Children [/services/catalog/v1/category/{categoryId}/children{?recursive}]
+
++ Parameters
+
+    + categoryId: `SJlkcsaQ` (string, required) - The Category id
+    + recursive: `false` (boolean, optional) - Optionally recurse the descendants tree.
+
+### Category Children [GET]
+
+::: note
+Example
+```bash
+  --url http://localhost:3000/services/catalog/v1/category/SJlkcsaQ/children \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+:::
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
++ Response 200 (application/json)
+
+  + Attributes (CategoryTree)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Products [/services/catalog/v1/product]
+
+### Product Create [POST]
+
+Creates a Product record.
+
+::: note
+Example
+```bash
+curl --request POST \
+  --url http://localhost:3000/services/catalog/v1/product \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{"sku": "0006", "title": "Product 001 title", 
+           "description": "Product 001 description", "price": 100.00}'
+```
+:::
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
+    + Attributes (CreateProductRequest)
+
++ Response 201 (application/json)
+
+  + Attributes (Product)
+
+## Product [/services/catalog/v1/product/{productId}]
+
++ Parameters
+
+    + productId: `0001` (string, required) - The Product id (sku)
+
+### Get [GET]
+
+::: note
+Example
+```bash
+  --url http://localhost:3000/services/catalog/v1/product/0001 \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+:::
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
++ Response 200 (application/json)
+
+  + Attributes (Product)
+
+### Remove [DELETE]
+
+Removes a Product. Not possible if it contains products.
+
+If the Product has childrens, they are re-parented to this Product parent.
+
+::: note
+Example
+```bash
+curl --request DELETE \
+  --url http://localhost:3000/services/catalog/v1/product/0001 \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+:::
+
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
++ Response 204 (application/json)
+
+### Update [PUT]
+
+Updates a Product.
+
+::: note
+Example
+```bash
+curl --request PUT \
+  --url http://localhost:3000/services/catalog/v1/product/0001 \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+  --data '{"title": "Modified product title"}'
+```
+:::
+
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
+    + Attributes (UpdateProductRequest)
+    
++ Response 204 (application/json)
