@@ -29,7 +29,7 @@ function opFactory(base) {
         .then(category => {
           var args = {
             fields: "_id title",
-            recursive: recursive,
+            recursive: recursive === 'true',
             allowEmptyChildren: true
           };
           category.getChildrenTree(args, (error, childrenTree) => {
