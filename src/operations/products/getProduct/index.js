@@ -15,7 +15,7 @@ function opFactory(base) {
    * Gets a Product
    */
   const op = {
-    name: 'createProduct',
+    name: 'getProduct',
     path: '/product/{sku}',
     method: 'GET',
     handler: ({sku}, reply) => {

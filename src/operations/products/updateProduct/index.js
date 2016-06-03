@@ -13,7 +13,7 @@ function opFactory(base) {
   /**
    * ## catalog.updateProduct service
    *
-   * Creates a new Product
+   * Updates a Product
    */
   const op = {
     name: 'updateProduct',
