@@ -51,7 +51,7 @@ function opFactory(base) {
         })
         .catch(error => {
           if (!(error.isBoom || error.statusCode == 404)) base.logger.error(error);
-          reply(Boom.wrap(error));
+          reply(boom.wrap(error));
         });
 
     }
