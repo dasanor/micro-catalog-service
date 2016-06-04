@@ -283,7 +283,6 @@ curl --request PUT \
 ```
 :::
 
-
 + Request default (application/json)
 
     + Headers
@@ -294,3 +293,48 @@ curl --request PUT \
     + Attributes (UpdateProductRequest)
     
 + Response 204 (application/json)
+
+## Products List [/services/catalog/v1/product{?id}{?sku}{?categories}{?status}{?title}{?description}]
+
++ Parameters
+
+    + id: `rJr6EXs7,HkZ6g6p7` (String, optional) - List of ids to match.
+    + sku: `0001,0002` (String, optional) - List of skus to match.
+    + categories: `SJlkcsaQ,r1rklaqm` (String, optional) - List of categories to match.
+    + status: `ONLINE,DRAFT` (String, optional) - List of statuses to match.
+    + title: `Canon` (String, optional) - Term to search in the title. The example is translated as a `/Canon/i` regex.
+    + description: `Canon` (String, optional) - Term to search in the description. The example is translated as a `/Canon/i` regex.
+
+### Products List [GET]
+
+List Products based on a search criteria.
+
+::: note
+Example. List Products that belong to the categories 'SJlkcsaQ' or 'S1_B6X97'.
+```bash
+curl --request GET \
+  --url http://localhost:3000/services/catalog/v1/product?categories=SJlkcsaQ,S1_B6X97 \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+Example. List Products that contains 'Canon' in the title and belogs to the 'SJlkcsaQ' category.
+```bash
+curl --request GET \
+  --url http://localhost:3000/services/catalog/v1/product?categories=SJlkcsaQ&title=Canon \
+  --header 'authorization: Bearer xxxxx...' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json'
+```
+:::
+
++ Request default (application/json)
+
+    + Headers
+    
+            accept: application/json
+            authorization: Bearer xxxxx...
+
++ Response 200 (application/json)
+
+  + Attributes (ProductList)

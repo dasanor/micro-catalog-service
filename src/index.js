@@ -7,6 +7,7 @@ require(base.config.get('models:categoryModel'))(base);
 // Add Product operations
 base.services.add(require('./operations/products/createProduct')(base));
 base.services.add(require('./operations/products/getProduct')(base));
+base.services.add(require('./operations/products/listProducts')(base));
 base.services.add(require('./operations/products/updateProduct')(base));
 base.services.add(require('./operations/products/removeProduct')(base));
 
