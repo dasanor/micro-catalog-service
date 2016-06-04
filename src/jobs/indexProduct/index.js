@@ -2,6 +2,13 @@
  * Hook to allow customization of the indexing process
  */
 function jobFactory(base) {
+  // Listen to Product changes and enqueue a indexing job
+  base.events.listen('products', (msg) => {
+    if (base.search) {
+      base.workers.enqueue('indexProduct', msg);
+    }
+  });
+
   return (params, done) => {
     base.search.index({
       index: 'products',
@@ -24,9 +31,5 @@ function jobFactory(base) {
   };
 }
 
-// Listen to Product changes and enqueue a indexing job
-base.events.listen('products', (msg) => {
-  base.workers.enqueue('indexProduct', msg);
-});
 
 module.exports = jobFactory;
