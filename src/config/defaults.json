@@ -7,5 +7,14 @@
     "productModel": "./models/productModel",
     "categoryModel": "./models/categoryModel"
   },
-  "maxCategoriesPerProduct": 5
+  "maxCategoriesPerProduct": 5,
+  "search": {
+    "host": "localhost:9200"
+  },
+  "workers": [
+    {
+      "worker": "indexProduct",
+      "handler": "./jobs/indexProduct"
+    }
+  ]
 }
