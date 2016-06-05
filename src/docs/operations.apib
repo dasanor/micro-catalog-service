@@ -294,7 +294,7 @@ curl --request PUT \
     
 + Response 204 (application/json)
 
-## Products List [/services/catalog/v1/product{?id}{?sku}{?categories}{?status}{?title}{?description}]
+## Products List [/services/catalog/v1/product{?id}{?sku}{?categories}{?status}{?title}{?description}{?limit}{?skip}{?fields}]
 
 + Parameters
 
@@ -304,6 +304,9 @@ curl --request PUT \
     + status: `ONLINE,DRAFT` (String, optional) - List of statuses to match.
     + title: `Canon` (String, optional) - Term to search in the title. The example is translated as a `/Canon/i` regex.
     + description: `Canon` (String, optional) - Term to search in the description. The example is translated as a `/Canon/i` regex.
+    + limit: `10` (Number, optional) - Maximun number of Products to return. Default: `10`. Maximum: `100`.
+    + skip: `0` (Number, optional) - Products to skip from the beginning of the list. 
+    + fields: `sku,title,price` (String, optional) - List of fields to include in the results. Default: all fields are included. `id` is allways included. 
 
 ### Products List [GET]
 
@@ -318,10 +321,10 @@ curl --request GET \
   --header 'accept: application/json' \
   --header 'content-type: application/json'
 ```
-Example. List Products that contains 'Canon' in the title and belogs to the 'SJlkcsaQ' category.
+Example. List Products that contains 'Canon' in the title and belogs to the 'SJlkcsaQ' category. Only return `sku`, `title` and `price`.
 ```bash
 curl --request GET \
-  --url http://localhost:3000/services/catalog/v1/product?categories=SJlkcsaQ&title=Canon \
+  --url http://localhost:3000/services/catalog/v1/product?categories=SJlkcsaQ&title=Canon&title=sku,title,price \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'

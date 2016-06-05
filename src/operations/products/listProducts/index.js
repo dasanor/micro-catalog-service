@@ -19,12 +19,26 @@ function opFactory(base) {
   const filterExpressions = {
     id: inExpression,
     sku: inExpression,
-    categories: inExpression,
-    status: inExpression,
     title: likeExpression,
-    description: likeExpression
+    description: likeExpression,
+    categories: inExpression,
+    status: inExpression
   };
+  const returnFields = [
+    'id',
+    'sku',
+    'title',
+    'description',
+    'price',
+    'salePrice',
+    'medias',
+    'categories',
+    'status'
+  ];
+  const defaultFields = returnFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);
+  const defaultLimit = 10;
+  const maxLimit = 100;
 
   /**
    * ## catalog.listProduct service
@@ -37,19 +51,40 @@ function opFactory(base) {
     method: 'GET',
     handler: (params, reply) => {
 
+      // Filters
       const filters = allowedProperties
-        .filter(k => params[k] !== undefined)
+        .filter(k => params.hasOwnProperty(k))
         .reduce((result, k) => {
           result[k] = filterExpressions[k](params[k]);
           return result;
         }, {});
 
-      base.db.models.Product
-        .find(filters)
-        .exec()
+      // Pagination
+      let limit = +params.limit || defaultLimit;
+      if (limit > maxLimit) limit = maxLimit;
+      const skip = +params.skip || 0;
+
+      // Fields
+      let fields;
+      if (params.fields) {
+        fields = params.fields.split(',')
+          .filter(f => returnFields.indexOf(f) !== -1)
+          .join(' ');
+      } else {
+        fields = defaultFields;
+      }
+
+      // Query
+      const query = base.db.models.Product
+        .find(filters, fields)
+        .skip(skip)
+        .limit(limit);
+
+      // Exec the query
+      query.exec()
         .then(products => {
           console.log(filters);
-          return reply({ query: filters, data: products.map(p => p.toClient()) });
+          return reply({ page: { limit, skip }, data: products.map(p => p.toClient()) });
         })
         .catch(error => {
           reply(boom.wrap(error));
