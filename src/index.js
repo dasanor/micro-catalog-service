@@ -14,6 +14,7 @@ base.services.add(require('./operations/products/removeProduct')(base));
 // Add Category operations
 base.services.add(require('./operations/categories/createCategory')(base));
 base.services.add(require('./operations/categories/getCategory')(base));
+base.services.add(require('./operations/categories/listCategories')(base));
 base.services.add(require('./operations/categories/updateCategory')(base));
 base.services.add(require('./operations/categories/removeCategory')(base));
 base.services.add(require('./operations/categories/getCategoryChildren')(base));
