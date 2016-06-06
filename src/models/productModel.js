@@ -20,6 +20,7 @@ function modelFactory(base) {
     status: { type: String, required: false, default: 'DRAFT' },
     title: { type: String, required: true },
     description: { type: String, required: true },
+    brand: { type: String, required: false },
     categories: [{ type: String, required: true }],
     price: { type: Number, required: true },
     salePrice: { type: Number, required: false },

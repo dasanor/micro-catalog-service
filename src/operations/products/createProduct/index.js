@@ -37,6 +37,7 @@ function opFactory(base) {
             status: msg.status || 'DRAFT',
             title: msg.title,
             description: msg.description,
+            brand: msg.brand,
             categories: msg.categories || [],
             price: msg.price,
             salePrice: msg.salePrice || msg.price,

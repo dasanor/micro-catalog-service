@@ -18,6 +18,7 @@ function jobFactory(base) {
         sku: params.data.sku,
         title: params.data.title,
         description: params.data.description,
+        brand: params.data.brand,
         categories: params.data.categories,
         medias: params.data.medias
       }

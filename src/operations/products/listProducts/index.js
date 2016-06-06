@@ -22,7 +22,8 @@ function opFactory(base) {
     title: likeExpression,
     description: likeExpression,
     categories: inExpression,
-    status: inExpression
+    status: inExpression,
+    brand: likeExpression
   };
   const returnFields = [
     'id',
@@ -33,7 +34,8 @@ function opFactory(base) {
     'salePrice',
     'medias',
     'categories',
-    'status'
+    'status',
+    'brand'
   ];
   const defaultFields = returnFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);
