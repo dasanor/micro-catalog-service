@@ -28,7 +28,7 @@ function opFactory(base) {
         })
         .then(category => {
           var args = {
-            fields: "_id title",
+            fields: "_id title slug",
             recursive: recursive === 'true',
             allowEmptyChildren: true
           };
