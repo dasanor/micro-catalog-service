@@ -85,7 +85,6 @@ function opFactory(base) {
       // Exec the query
       query.exec()
         .then(products => {
-          console.log(filters);
           return reply({ page: { limit, skip }, data: products.map(p => p.toClient()) });
         })
         .catch(error => {

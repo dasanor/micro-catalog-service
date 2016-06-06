@@ -83,7 +83,6 @@ function opFactory(base) {
       // Exec the query
       query.exec()
         .then(categories => {
-          console.log(filters);
           return reply({ page: { limit, skip }, data: categories.map(p => p.toClient()) });
         })
         .catch(error => {
