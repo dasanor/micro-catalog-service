@@ -16,10 +16,13 @@ function jobFactory(base) {
       id: params.data.sku,
       body: {
         sku: params.data.sku,
+        status: params.data.status,
         title: params.data.title,
         description: params.data.description,
         brand: params.data.brand,
         categories: params.data.categories,
+        price: params.data.price,
+        salePrice: params.data.salePrice,
         medias: params.data.medias
       }
     }, (error) => {
