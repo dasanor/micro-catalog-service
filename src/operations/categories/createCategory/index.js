@@ -9,6 +9,31 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
+
+  // Create the `ROOT` Category if it doesn't exists
+  base.db.models.Category
+    .findOne({ _id: 'ROOT' })
+    .then((category) => {
+      if (!category) {
+        const rootCat = new base.db.models.Category({
+          _id: 'ROOT',
+          title: 'Root Category',
+          description: 'Root Category',
+          path: 'ROOT',
+          slug: 'root'
+        });
+        rootCat
+          .save()
+          .then((savedCategory) => {
+            base.logger.info('[category] Root category inserted');
+          })
+          .catch(error => {
+            base.logger.error(`[category] Root category not inserted, ${error}`);
+          });
+      }
+    });
+
+
   /**
    * ## catalog.createCategory service
    *
