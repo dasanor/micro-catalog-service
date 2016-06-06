@@ -12,7 +12,7 @@ function modelFactory(base) {
       }
     },
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     slug: { type: String, required: true }
   }, { _id: false, minimize: false, timestamps: true });
 
