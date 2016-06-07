@@ -10,6 +10,7 @@ const boom = require('boom');
  */
 function opFactory(base) {
   const checkCategories = require('../createProduct/checkCategories')(base);
+  const productsChannel = base.config.get('channels:products');
   /**
    * ## catalog.updateProduct service
    *
@@ -47,10 +48,7 @@ function opFactory(base) {
         .then(savedProduct => {
           if (!savedProduct) throw (boom.notFound('Product not found'));
           // Send a products UPDATE event
-          base.events.send('products', {
-            type: 'UPDATE',
-            data: savedProduct.toObject({ virtuals: true })
-          });
+          base.events.send(productsChannel, 'UPDATE', savedProduct.toObject({ virtuals: true }));
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${savedProduct._id} updated`);
           // Return the product to the client
           return reply(savedProduct.toClient());

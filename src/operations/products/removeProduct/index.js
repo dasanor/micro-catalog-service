@@ -9,6 +9,7 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
+  const productsChannel = base.config.get('channels:products');
   /**
    * ## catalog.removeProduct service
    *
@@ -25,6 +26,7 @@ function opFactory(base) {
         .then(removedProduct => {
           if (!removedProduct) throw (boom.notFound('Product not found'));
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${removedProduct.sku} removed`);
+          base.events.send(productsChannel, 'REMOVE', removedProduct.toObject({ virtuals: true }));
           return reply().code(204);
         })
         .catch(error => {

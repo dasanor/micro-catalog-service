@@ -16,5 +16,8 @@
       "worker": "indexProduct",
       "handler": "./jobs/indexProduct"
     }
-  ]
+  ],
+  "channels": {
+    "products": "PRODUCTS"
+  }
 }

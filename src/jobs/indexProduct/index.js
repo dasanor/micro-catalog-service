@@ -2,38 +2,57 @@
  * Hook to allow customization of the indexing process
  */
 function jobFactory(base) {
-  // Listen to Product changes and enqueue a indexing job
-  base.events.listen('products', (msg) => {
-    if (base.search) {
-      base.workers.enqueue('indexProduct', msg);
-    }
-  });
 
-  return (params, done) => {
-    base.search.index({
-      index: 'products',
-      type: 'product',
-      id: params.data.sku,
-      body: {
-        sku: params.data.sku,
-        status: params.data.status,
-        title: params.data.title,
-        description: params.data.description,
-        brand: params.data.brand,
-        categories: params.data.categories,
-        price: params.data.price,
-        salePrice: params.data.salePrice,
-        medias: params.data.medias
-      }
-    }, (error) => {
-      if (error) {
-        base.logger.error(error);
-        return done(error);
-      }
-      return done();
+  const searchIndex = 'products';
+  const searchType = 'product';
+  const productsChannel = base.config.get('channels:products');
+
+  // Listen to Product changes and enqueue a indexing job
+  if (base.search) {
+    base.logger.info('[products] activating indexing');
+    base.events.listen(productsChannel, (msg) => {
+      base.workers.enqueue('indexProduct', msg);
     });
+  }
+
+  return ({ type, data:product }, done) => {
+    if (type === 'CREATE' || type === 'UPDATE') {
+      base.search.index({
+        index: searchIndex,
+        type: searchType,
+        id: product.id,
+        body: {
+          sku: product.sku,
+          status: product.status,
+          title: product.title,
+          description: product.description,
+          brand: product.brand,
+          categories: product.categories,
+          price: product.price,
+          salePrice: product.salePrice,
+          medias: product.medias
+        }
+      }, (error) => {
+        if (error) {
+          base.logger.error(`[catalog] indexing saved product ${error}`);
+          return done(error);
+        }
+        return done();
+      });
+    } else if (type === 'REMOVE') {
+      base.search.delete({
+        index: searchIndex,
+        type: searchType,
+        id: product.id
+      }, (error) => {
+        if (error) {
+          base.logger.error(`[catalog] indexing deleted product ${error}`);
+          return done(error);
+        }
+        return done();
+      });
+    }
   };
 }
-
 
 module.exports = jobFactory;

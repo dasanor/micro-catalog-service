@@ -10,6 +10,7 @@ const boom = require('boom');
  */
 function opFactory(base) {
   const checkCategories = require('./checkCategories')(base);
+  const productsChannel = base.config.get('channels:products');
   /**
    * ## catalog.createProduct service
    *
@@ -48,10 +49,7 @@ function opFactory(base) {
         .then(savedProduct => {
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${savedProduct._id} created`);
           // Send a products CREATE event
-          base.events.send('products', {
-            type: 'CREATE',
-            data: savedProduct.toObject({ virtuals: true })
-          });
+          base.events.send(productsChannel, 'CREATE', savedProduct.toObject({ virtuals: true }));
           // Return the product to the client
           return reply(savedProduct.toClient()).code(201);
         })
