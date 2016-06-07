@@ -17,15 +17,15 @@ function opFactory(base) {
    */
   const op = {
     name: 'removeProduct',
-    path: '/product/{sku}',
+    path: '/product/{id}',
     method: 'DELETE',
-    handler: ({sku}, reply) => {
+    handler: ({id}, reply) => {
       base.db.models.Product
-        .findOneAndRemove({ sku: sku })
+        .findOneAndRemove({ _id: id })
         .exec()
         .then(removedProduct => {
           if (!removedProduct) throw (boom.notFound('Product not found'));
-          if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${removedProduct.sku} removed`);
+          if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${removedProduct.id} removed`);
           base.events.send(productsChannel, 'REMOVE', removedProduct.toObject({ virtuals: true }));
           return reply().code(204);
         })

@@ -18,7 +18,7 @@ function opFactory(base) {
    */
   const op = {
     name: 'updateProduct',
-    path: '/product/{sku}',
+    path: '/product/{id}',
     method: 'PUT',
     // TODO: create the product JsonSchema
     handler: (msg, reply) => {
@@ -42,7 +42,7 @@ function opFactory(base) {
           if (msg.salePrice) update.salePrice = msg.salePrice;
           if (msg.medias) update.medias = msg.medias;
           return base.db.models.Product
-            .findOneAndUpdate({ sku: msg.sku }, { $set: update }, { new: true })
+            .findOneAndUpdate({ _id: msg.id }, { $set: update }, { new: true })
             .exec()
         })
         .then(savedProduct => {

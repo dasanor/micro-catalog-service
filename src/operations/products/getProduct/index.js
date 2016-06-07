@@ -16,11 +16,11 @@ function opFactory(base) {
    */
   const op = {
     name: 'getProduct',
-    path: '/product/{sku}',
+    path: '/product/{id}',
     method: 'GET',
-    handler: ({sku}, reply) => {
+    handler: ({id}, reply) => {
       base.db.models.Product
-        .findOne({ sku })
+        .findOne({ _id: id })
         .exec()
         .then(product => {
           if (!product) throw boom.notFound('Product not found');

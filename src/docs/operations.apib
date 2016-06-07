@@ -215,14 +215,14 @@ curl --request POST \
 
 + Parameters
 
-    + productId: `0001` (string, required) - The Product id (sku)
+    + productId: `Hy79JiVV` (string, required) - The Product id
 
 ### Get [GET]
 
 ::: note
 Example
 ```bash
-  --url http://localhost:3000/services/catalog/v1/product/0001 \
+  --url http://localhost:3000/services/catalog/v1/product/Hy79JiVV \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'
@@ -242,15 +242,13 @@ Example
 
 ### Remove [DELETE]
 
-Removes a Product. Not possible if it contains products.
-
-If the Product has childrens, they are re-parented to this Product parent.
+Removes a Product.
 
 ::: note
 Example
 ```bash
 curl --request DELETE \
-  --url http://localhost:3000/services/catalog/v1/product/0001 \
+  --url http://localhost:3000/services/catalog/v1/product/Hy79JiVV \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'
@@ -275,7 +273,7 @@ Updates a Product.
 Example
 ```bash
 curl --request PUT \
-  --url http://localhost:3000/services/catalog/v1/product/0001 \
+  --url http://localhost:3000/services/catalog/v1/product/Hy79JiVV \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'

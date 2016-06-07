@@ -17,7 +17,8 @@
 + url:http://placehold.it/100x100 (required, string) - The Media url
 
 ## Product (object)
-+ id:0001 (required, string) - Unique Product identifier (sku).
++ id:Hy79JiVV (required, string) - Unique Product identifier.
++ sku:0001 (required, string) - Product SKU.
 + status:ONLINE,DRAFT (required, enum[string]) - The status of the product from [ONLINE|DRAFT]. Default: 'DRAFT'.
 + title:Product 0001 (required, string) - The Product title.
 + description:This is the Product 0001 (required, string) - The Product description.
@@ -42,5 +43,6 @@
 ## CategoryTree (array[CategoryTreeEntry])
 
 ## CategoryTreeEntry (object)
-+ id:0001 (required, string) - Unique Product identifier.
++ id:Hy79JiVV (required, string) - Unique Product identifier.
 + title:Product 0001 (required, string) - The Product title.
++ slug:cat01 (required, string) - The Category slug to use in paths.
