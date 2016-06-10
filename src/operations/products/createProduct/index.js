@@ -10,6 +10,7 @@ const boom = require('boom');
  */
 function opFactory(base) {
   const checkCategories = require('./checkCategories')(base);
+  const checkClassifications = require('./checkClassifications')(base);
   const productsChannel = base.config.get('channels:products');
   /**
    * ## catalog.createProduct service
@@ -21,29 +22,30 @@ function opFactory(base) {
     path: '/product',
     method: 'POST',
     // TODO: create the product JsonSchema
-    handler: (msg, reply) => {
-      let promise = Promise.resolve();
-      if (msg.categories) {
-        // Deduplicate category codes
-        msg.categories = [...new Set(msg.categories)];
-        // Check categories existence
-        promise = checkCategories(msg);
-      }
-      // Save
-      promise
+    handler: (productData, reply) => {
+      Promise.resolve(productData)
+        .then(productData => {
+          // Deduplicate category codes
+          productData.categories = [...new Set(productData.categories)];
+          // Check categories existence
+          return checkCategories(productData);
+        })
+        .then(categories => checkClassifications(productData, categories))
         .then(() => {
           // Explicitly name allowed properties
           const product = new base.db.models.Product({
-            sku: msg.sku,
-            status: msg.status || 'DRAFT',
-            title: msg.title,
-            description: msg.description,
-            brand: msg.brand,
-            categories: msg.categories || [],
-            price: msg.price,
-            salePrice: msg.salePrice || msg.price,
-            medias: msg.medias
+            sku: productData.sku,
+            status: productData.status || 'DRAFT',
+            title: productData.title,
+            description: productData.description,
+            brand: productData.brand,
+            categories: productData.categories || [],
+            classifications: productData.classifications || [],
+            price: productData.price,
+            salePrice: productData.salePrice || productData.price,
+            medias: productData.medias
           });
+          // Save
           return product.save();
         })
         .then(savedProduct => {

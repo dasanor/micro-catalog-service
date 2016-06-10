@@ -3,6 +3,12 @@ const shortId = require('shortid');
 function modelFactory(base) {
   if (base.logger.isDebugEnabled()) base.logger.debug('[db] registering model Product');
 
+  // Classification Values Schema
+  const classificationValuesSchema = base.db.Schema({
+    id: { type: String, required: true },
+    value: { type: String, required: true }
+  }, { _id: false, minimize: false });
+
   // Media Schema
   const mediaSchema = base.db.Schema({
     id: { type: String, required: true },
@@ -24,7 +30,8 @@ function modelFactory(base) {
     categories: [{ type: String, required: true }],
     price: { type: Number, required: true },
     salePrice: { type: Number, required: false },
-    medias: [mediaSchema]
+    medias: [mediaSchema],
+    classifications: [classificationValuesSchema]
   }, { _id: false, minimize: false, timestamps: true });
 
   // Enable the virtuals when converting to JSON
