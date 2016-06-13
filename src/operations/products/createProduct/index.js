@@ -49,17 +49,20 @@ function opFactory(base) {
           return product.save();
         })
         .then(savedProduct => {
-          if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${savedProduct._id} created`);
           // Send a products CREATE event
           base.events.send(productsChannel, 'CREATE', savedProduct.toObject({ virtuals: true }));
+          if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${savedProduct._id} created`);
           // Return the product to the client
           return reply(savedProduct.toClient()).code(201);
         })
         .catch(error => {
-          if (11000 === error.code || 11001 === error.code) {
-            return reply(boom.forbidden('duplicate key'));
+          if (error.name && error.name === 'ValidationError') {
+            return reply(boom.create(406, 'ValidationError', { data: base.util.extractErrors(error) }));
           }
-          if (!(error.isBoom || error.statusCode == 404)) base.logger.error(error);
+          if (error.name && error.name === 'MongoError' && (error.code === 11000 || error.code === 11001)) {
+            return reply(boom.forbidden('duplicate key'), { data: error.errmsg });
+          }
+          if (!(error.isBoom || error.statusCode === 404)) base.logger.error(error);
           return reply(boom.wrap(error));
         });
     }
