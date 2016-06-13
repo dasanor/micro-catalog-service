@@ -10,6 +10,7 @@ const boom = require('boom');
  */
 function opFactory(base) {
   const checkCategories = require('../createProduct/checkCategories')(base);
+  const checkClassifications = require('../createProduct/checkClassifications')(base);
   const productsChannel = base.config.get('channels:products');
   /**
    * ## catalog.updateProduct service
@@ -21,28 +22,29 @@ function opFactory(base) {
     path: '/product/{id}',
     method: 'PUT',
     // TODO: create the product JsonSchema
-    handler: (msg, reply) => {
-      let promise = Promise.resolve();
-      if (msg.categories) {
-        // Deduplicate category codes
-        msg.categories = [...new Set(msg.categories)];
-        // Check categories existence
-        promise = checkCategories(msg);
-      }
-      // Save
-      promise
+    handler: (productData, reply) => {
+      Promise.resolve(productData)
+        .then(productData => {
+          // Deduplicate category codes
+          productData.categories = [...new Set(productData.categories)];
+          // Check categories existence
+          return checkCategories(productData);
+        })
+        .then(categories => checkClassifications(productData, categories))
         .then(() => {
           // Explicitly name allowed updates
           const update = {};
-          if (msg.status) update.status = msg.status;
-          if (msg.title) update.title = msg.title;
-          if (msg.description) update.description = msg.description;
-          if (msg.categories) update.categories = msg.categories;
-          if (msg.price) update.price = msg.price;
-          if (msg.salePrice) update.salePrice = msg.salePrice;
-          if (msg.medias) update.medias = msg.medias;
+          if (productData.sku) update.sku = productData.sku;
+          if (productData.status) update.status = productData.status;
+          if (productData.title) update.title = productData.title;
+          if (productData.description) update.description = productData.description;
+          if (productData.categories) update.categories = productData.categories;
+          if (productData.classifications) update.classifications = productData.classifications;
+          if (productData.price) update.price = productData.price;
+          if (productData.salePrice) update.salePrice = productData.salePrice;
+          if (productData.medias) update.medias = productData.medias;
           return base.db.models.Product
-            .findOneAndUpdate({ _id: msg.id }, { $set: update }, { new: true })
+            .findOneAndUpdate({ _id: productData.id }, { $set: update }, { new: true })
             .exec()
         })
         .then(savedProduct => {
@@ -54,8 +56,14 @@ function opFactory(base) {
           return reply(savedProduct.toClient());
         })
         .catch(error => {
+          if (error.name && error.name === 'ValidationError') {
+            return reply(boom.create(406, 'ValidationError', { data: base.util.extractErrors(error) }));
+          }
+          if (error.name && error.name === 'MongoError' && (error.code === 11000 || error.code === 11001)) {
+            return reply(boom.create(403, 'Duplicate key', { data: error.errmsg }));
+          }
           if (!(error.isBoom || error.statusCode == 404)) base.logger.error(error);
-          reply(boom.wrap(error));
+          return reply(boom.wrap(error));
         });
     }
   };
