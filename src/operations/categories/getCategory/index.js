@@ -15,7 +15,7 @@ function opFactory(base) {
    * Gets a Category
    */
   const op = {
-    name: 'createCategory',
+    name: 'getCategory',
     path: '/category/{id}',
     method: 'GET',
     handler: ({id}, reply) => {
