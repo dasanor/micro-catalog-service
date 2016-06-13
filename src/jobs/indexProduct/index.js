@@ -28,7 +28,10 @@ function jobFactory(base) {
           description: product.description,
           brand: product.brand,
           categories: product.categories,
-          classifications: product.classifications,
+          classifications: product.classifications.reduce((result, k) => {
+            result[k.id] = k.value;
+            return result;
+          }, {}),
           price: product.price,
           salePrice: product.salePrice,
           medias: product.medias
