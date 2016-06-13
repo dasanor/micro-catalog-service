@@ -4,6 +4,14 @@ var tree = require('mongoose-path-tree');
 function modelFactory(base) {
   if (base.logger.isDebugEnabled()) base.logger.debug('[db] registering model Category');
 
+  // Classification Schema
+  const classificationSchema = base.db.Schema({
+    id: { type: String, required: true },
+    description: { type: String, required: true },
+    mandatory: { type: Boolean, required: true },
+    type: { type: String, required: true, enum: ['STRING', 'BOOLEAN', 'NUMBER'] }
+  }, { _id: false, minimize: false });
+
   // The root schema
   const schema = base.db.Schema({
     _id: {
@@ -13,7 +21,8 @@ function modelFactory(base) {
     },
     title: { type: String, required: true },
     description: { type: String, required: false },
-    slug: { type: String, required: true }
+    slug: { type: String, required: true },
+    classifications: [classificationSchema]
   }, { _id: false, minimize: false, timestamps: true });
 
   // Enable the virtuals when converting to JSON

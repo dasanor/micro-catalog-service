@@ -28,6 +28,7 @@ function jobFactory(base) {
           description: product.description,
           brand: product.brand,
           categories: product.categories,
+          classifications: product.classifications,
           price: product.price,
           salePrice: product.salePrice,
           medias: product.medias

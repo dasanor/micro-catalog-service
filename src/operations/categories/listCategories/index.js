@@ -33,7 +33,8 @@ function opFactory(base) {
     'description',
     'slug',
     'parent',
-    'path'
+    'path',
+    'classifications'
   ];
   const defaultFields = returnFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);

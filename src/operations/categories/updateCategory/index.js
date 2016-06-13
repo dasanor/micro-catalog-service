@@ -29,6 +29,7 @@ function opFactory(base) {
           if (msg.title) category.title = msg.title;
           if (msg.description) category.description = msg.description;
           if (msg.slug) category.slug = msg.slug;
+          if (msg.classifications) category.classifications = msg.classifications;
           if (msg.parent) {
             return base.db.models.Category
               .findOne({ _id: msg.parent })

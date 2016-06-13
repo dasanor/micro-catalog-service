@@ -3,6 +3,12 @@ const shortId = require('shortid');
 function modelFactory(base) {
   if (base.logger.isDebugEnabled()) base.logger.debug('[db] registering model Product');
 
+  // Classification Values Schema
+  const classificationValuesSchema = base.db.Schema({
+    id: { type: String, required: true },
+    value: { type: String, required: true }
+  }, { _id: false, minimize: false });
+
   // Media Schema
   const mediaSchema = base.db.Schema({
     id: { type: String, required: true },
@@ -17,14 +23,15 @@ function modelFactory(base) {
       }
     },
     sku: { type: String, required: true },
-    status: { type: String, required: false, default: 'DRAFT' },
+    status: { type: String, required: false, default: 'DRAFT', enum: ['DRAFT', 'ONLINE'] },
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     brand: { type: String, required: false },
     categories: [{ type: String, required: true }],
     price: { type: Number, required: true },
     salePrice: { type: Number, required: false },
-    medias: [mediaSchema]
+    medias: [mediaSchema],
+    classifications: [classificationValuesSchema]
   }, { _id: false, minimize: false, timestamps: true });
 
   // Enable the virtuals when converting to JSON

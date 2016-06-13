@@ -48,7 +48,8 @@ function opFactory(base) {
       const category = new base.db.models.Category({
         title: msg.title,
         description: msg.description,
-        slug: msg.slug
+        slug: msg.slug,
+        classifications: msg.classifications
       });
       let parentSearch = {};
       if (msg.parent) {

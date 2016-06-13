@@ -10,22 +10,18 @@ function checkCategories(base) {
     msg.categories.map(id => {
       return promises.push(new Promise(function (resolve, reject) {
         base.db.models.Category
-          .find({ _id: id }, { _id: 1 })
-          .limit(1)
+          .findById(id)
           .exec()
           .then(category => {
-            if (!category[0]) throw boom.notFound('Category not found', { id: id });
-            resolve();
+            if (!category) throw boom.notFound('Category not found', { id: id });
+            resolve(category);
           })
           .catch(error => {
             reject(error);
           });
       }));
     });
-    return Promise.all(promises)
-      .then(function (results) {
-        return (results)
-      });
+    return Promise.all(promises);
   };
 }
 
