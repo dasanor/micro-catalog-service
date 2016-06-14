@@ -9,8 +9,9 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
-  const checkCategories = require('../createProduct/checkCategories')(base);
-  const checkClassifications = require('../createProduct/checkClassifications')(base);
+  const checkCategories = base.utils.loadModule('hooks:checkCategories:handler');
+  const checkClassifications = base.utils.loadModule('hooks:checkClassifications:handler');
+  const checkVariants = base.utils.loadModule('hooks:checkVariants:handler');
   const productsChannel = base.config.get('channels:products');
   /**
    * ## catalog.updateProduct service
@@ -25,12 +26,16 @@ function opFactory(base) {
     handler: (productData, reply) => {
       Promise.resolve(productData)
         .then(productData => {
-          // Deduplicate category codes
-          productData.categories = [...new Set(productData.categories)];
-          // Check categories existence
-          return checkCategories(productData);
+          if (productData.categories) {
+            // Deduplicate category codes
+            productData.categories = [...new Set(productData.categories)];
+            // Check categories existence
+            return checkCategories(productData)
+              .then(categories => checkClassifications(productData, categories))
+          }
+          return productData;
         })
-        .then(categories => checkClassifications(productData, categories))
+        .then(checkVariants)
         .then(() => {
           // Explicitly name allowed updates
           const update = {};
@@ -43,9 +48,13 @@ function opFactory(base) {
           if (productData.price) update.price = productData.price;
           if (productData.salePrice) update.salePrice = productData.salePrice;
           if (productData.medias) update.medias = productData.medias;
+          if (productData.base) update.base = productData.base;
+          if (productData.variations) update.variations = productData.variations;
+          if (productData.modifiers) update.modifiers = productData.modifiers;
+          if (productData.variants) update.variants = productData.variants;
           return base.db.models.Product
             .findOneAndUpdate({ _id: productData.id }, { $set: update }, { new: true })
-            .exec()
+            .exec();
         })
         .then(savedProduct => {
           if (!savedProduct) throw (boom.notFound('Product not found'));

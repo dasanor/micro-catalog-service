@@ -21,13 +21,14 @@ function opFactory(base) {
     handler: ({id}, reply) => {
       base.db.models.Product
         .findOne({ _id: id })
+        .populate('variants')
         .exec()
         .then(product => {
           if (!product) throw boom.notFound('Product not found');
           return reply(product.toClient());
         })
         .catch(error => {
-          if (!(error.isBoom || error.statusCode == 404)) base.logger.error(error);
+          if (!(error.isBoom || error.statusCode === 404)) base.logger.error(error);
           reply(boom.wrap(error));
         });
 

@@ -19,7 +19,7 @@ function opFactory(base) {
     name: 'removeProduct',
     path: '/product/{id}',
     method: 'DELETE',
-    handler: ({id}, reply) => {
+    handler: ({ id }, reply) => {
       base.db.models.Product
         .findOneAndRemove({ _id: id })
         .exec()
@@ -27,10 +27,24 @@ function opFactory(base) {
           if (!removedProduct) throw (boom.notFound('Product not found'));
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${removedProduct.id} removed`);
           base.events.send(productsChannel, 'REMOVE', removedProduct.toObject({ virtuals: true }));
-          return reply().code(204);
+          return removedProduct;
         })
+        .then(removedProduct => {
+          if (removedProduct.base) {
+            return base.db.models.Product
+              .findOneAndUpdate({
+                _id: removedProduct.base
+              }, {
+                $pull: { variants: removedProduct.id }
+              })
+              .exec()
+              .then(() => removedProduct);
+          }
+          return removedProduct;
+        })
+        .then(() => reply().code(204))
         .catch(error => {
-          if (!(error.isBoom || error.statusCode == 404)) base.logger.error(error);
+          if (!(error.isBoom || error.statusCode === 404)) base.logger.error(error);
           reply(boom.wrap(error));
         });
     }

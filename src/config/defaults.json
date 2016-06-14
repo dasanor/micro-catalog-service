@@ -7,6 +7,17 @@
     "productModel": "./models/productModel",
     "categoryModel": "./models/categoryModel"
   },
+  "hooks": {
+    "checkCategories": {
+      "handler": "./operations/products/createProduct/hooks/checkCategories"
+    },
+    "checkClassifications": {
+      "handler": "./operations/products/createProduct/hooks/checkClassifications"
+    },
+    "checkVariants": {
+      "handler": "./operations/products/createProduct/hooks/checkVariants"
+    }
+  },
   "maxCategoriesPerProduct": 5,
   "search": {
     "host": "localhost:9200"

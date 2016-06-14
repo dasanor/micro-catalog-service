@@ -9,8 +9,9 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
-  const checkCategories = require('./checkCategories')(base);
-  const checkClassifications = require('./checkClassifications')(base);
+  const checkCategories = base.utils.loadModule('hooks:checkCategories:handler');
+  const checkClassifications = base.utils.loadModule('hooks:checkClassifications:handler');
+  const checkVariants = base.utils.loadModule('hooks:checkVariants:handler');
   const productsChannel = base.config.get('channels:products');
   /**
    * ## catalog.createProduct service
@@ -31,6 +32,7 @@ function opFactory(base) {
           return checkCategories(productData);
         })
         .then(categories => checkClassifications(productData, categories))
+        .then(checkVariants)
         .then(() => {
           // Explicitly name allowed properties
           const product = new base.db.models.Product({
@@ -43,8 +45,14 @@ function opFactory(base) {
             classifications: productData.classifications || [],
             price: productData.price,
             salePrice: productData.salePrice || productData.price,
-            medias: productData.medias
+            medias: productData.medias,
           });
+          if (productData.base) {
+            product.base = productData.base;
+            product.variations = productData.variations;
+          } else if (productData.modifiers) {
+            product.modifiers = productData.modifiers;
+          }
           // Save
           return product.save();
         })
@@ -52,9 +60,22 @@ function opFactory(base) {
           // Send a products CREATE event
           base.events.send(productsChannel, 'CREATE', savedProduct.toObject({ virtuals: true }));
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${savedProduct._id} created`);
-          // Return the product to the client
-          return reply(savedProduct.toClient()).code(201);
+          return savedProduct;
         })
+        .then(savedProduct => {
+          if (savedProduct.base) {
+            return base.db.models.Product
+              .findOneAndUpdate({
+                _id: savedProduct.base
+              }, {
+                $push: { variants: savedProduct.id }
+              })
+              .exec()
+              .then(() => savedProduct);
+          }
+          return savedProduct;
+        })
+        .then(savedProduct => reply(savedProduct.toClient()).code(201))
         .catch(error => {
           if (error.name && error.name === 'ValidationError') {
             return reply(boom.create(406, 'ValidationError', { data: base.util.extractErrors(error) }));

@@ -16,7 +16,7 @@ function jobFactory(base) {
   }
 
   return ({ type, data:product }, done) => {
-    if (type === 'CREATE' || type === 'UPDATE') {
+    if ((type === 'CREATE' || type === 'UPDATE') && !product.modifiers) {
       base.search.index({
         index: searchIndex,
         type: searchType,
@@ -34,7 +34,9 @@ function jobFactory(base) {
           }, {}),
           price: product.price,
           salePrice: product.salePrice,
-          medias: product.medias
+          medias: product.medias,
+          base: product.base,
+          variations: product.variations
         }
       }, (error) => {
         if (error) {
