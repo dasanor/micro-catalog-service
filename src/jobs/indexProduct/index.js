@@ -16,47 +16,51 @@ function jobFactory(base) {
   }
 
   return ({ type, data:product }, done) => {
-    if ((type === 'CREATE' || type === 'UPDATE') && !product.modifiers) {
+    console.log(type, product.modifiers, product.status);
+    if ((type === 'CREATE' || type === 'UPDATE') && !product.modifiers[0] && product.status === 'ONLINE') {
       base.search.index({
-        index: searchIndex,
-        type: searchType,
-        id: product.id,
-        body: {
-          sku: product.sku,
-          status: product.status,
-          title: product.title,
-          description: product.description,
-          brand: product.brand,
-          categories: product.categories,
-          classifications: product.classifications.reduce((result, k) => {
-            result[k.id] = k.value;
-            return result;
-          }, {}),
-          price: product.price,
-          salePrice: product.salePrice,
-          medias: product.medias,
-          base: product.base,
-          variations: product.variations
-        }
-      }, (error) => {
-        if (error) {
+          index: searchIndex,
+          type: searchType,
+          id: product.id,
+          body: {
+            sku: product.sku,
+            status: product.status,
+            title: product.title,
+            description: product.description,
+            brand: product.brand,
+            categories: product.categories,
+            classifications: product.classifications.reduce((result, k) => {
+              result[k.id] = k.value;
+              return result;
+            }, {}),
+            price: product.price,
+            salePrice: product.salePrice,
+            medias: product.medias,
+            base: product.base,
+            variations: product.variations
+          }
+        })
+        .then(() => {
+          return done();
+        })
+        .catch(error => {
           base.logger.error(`[catalog] indexing saved product ${error}`);
           return done(error);
-        }
-        return done();
       });
-    } else if (type === 'REMOVE') {
+    } else if (type === 'REMOVE' || product.status !== 'ONLINE') {
       base.search.delete({
-        index: searchIndex,
-        type: searchType,
-        id: product.id
-      }, (error) => {
-        if (error) {
+          index: searchIndex,
+          type: searchType,
+          id: product.id,
+          ignore: [404]
+        })
+        .then(() => {
+          return done();
+        })
+        .catch(error => {
           base.logger.error(`[catalog] indexing deleted product ${error}`);
           return done(error);
-        }
-        return done();
-      });
+        });
     }
   };
 }
