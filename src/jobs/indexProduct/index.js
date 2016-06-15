@@ -16,7 +16,6 @@ function jobFactory(base) {
   }
 
   return ({ type, data:product }, done) => {
-    console.log(type, product.modifiers, product.status);
     if ((type === 'CREATE' || type === 'UPDATE') && !product.modifiers[0] && product.status === 'ONLINE') {
       base.search.index({
           index: searchIndex,
