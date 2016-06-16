@@ -66,7 +66,7 @@ function opFactory(base) {
         })
         .catch(error => {
           if (error.name && error.name === 'ValidationError') {
-            return reply(boom.create(406, 'ValidationError', { data: base.util.extractErrors(error) }));
+            return reply(boom.create(406, 'ValidationError', { data: base.utils.extractErrors(error) }));
           }
           if (error.name && error.name === 'MongoError' && (error.code === 11000 || error.code === 11001)) {
             return reply(boom.create(403, 'Duplicate key', { data: error.errmsg }));
