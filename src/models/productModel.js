@@ -41,7 +41,8 @@ function modelFactory(base) {
     modifiers: [{ type: String, required: false }],
     variants: [{ type: String, required: false, ref: 'Product' }],
     base: { type: String, required: false },
-    variations: [variationsValuesSchema]
+    variations: [variationsValuesSchema],
+    taxClass: { type: String, required: false }
   }, { _id: false, timestamps: true });
 
   // Enable the virtuals when converting to JSON

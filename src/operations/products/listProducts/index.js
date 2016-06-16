@@ -23,7 +23,8 @@ function opFactory(base) {
     description: likeExpression,
     categories: inExpression,
     status: inExpression,
-    brand: likeExpression
+    brand: likeExpression,
+    taxClass: inExpression
   };
   const returnFields = [
     'id',
@@ -35,7 +36,8 @@ function opFactory(base) {
     'medias',
     'categories',
     'status',
-    'brand'
+    'brand',
+    'taxClass'
   ];
   const defaultFields = returnFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);
@@ -57,7 +59,8 @@ function opFactory(base) {
       const filters = allowedProperties
         .filter(k => params.hasOwnProperty(k))
         .reduce((result, k) => {
-          result[k] = filterExpressions[k](params[k]);
+          const field = k === 'id' ? '_id' : k;
+          result[field] = filterExpressions[k](params[k]);
           return result;
         }, {});
 

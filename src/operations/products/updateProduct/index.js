@@ -52,6 +52,7 @@ function opFactory(base) {
           if (productData.variations) update.variations = productData.variations;
           if (productData.modifiers) update.modifiers = productData.modifiers;
           if (productData.variants) update.variants = productData.variants;
+          if (productData.taxModel) update.taxModel = productData.taxModel;
           return base.db.models.Product
             .findOneAndUpdate({ _id: productData.id }, { $set: update }, { new: true })
             .exec();
