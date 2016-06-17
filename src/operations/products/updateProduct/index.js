@@ -47,12 +47,13 @@ function opFactory(base) {
           if (productData.classifications) update.classifications = productData.classifications;
           if (productData.price) update.price = productData.price;
           if (productData.salePrice) update.salePrice = productData.salePrice;
+          if (productData.isNetPrice) update.isNetPrice = productData.isNetPrice;
           if (productData.medias) update.medias = productData.medias;
           if (productData.base) update.base = productData.base;
           if (productData.variations) update.variations = productData.variations;
           if (productData.modifiers) update.modifiers = productData.modifiers;
           if (productData.variants) update.variants = productData.variants;
-          if (productData.taxModel) update.taxModel = productData.taxModel;
+          if (productData.taxCode) update.taxCode = productData.taxCode;
           return base.db.models.Product
             .findOneAndUpdate({ _id: productData.id }, { $set: update }, { new: true })
             .exec();

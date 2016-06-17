@@ -45,6 +45,8 @@ function opFactory(base) {
             classifications: productData.classifications || [],
             price: productData.price,
             salePrice: productData.salePrice || productData.price,
+            isNetPrice: productData.isNetPrice,
+            taxCode: productData.taxCode,
             medias: productData.medias,
           });
           if (productData.base) {

@@ -24,7 +24,7 @@ function opFactory(base) {
     categories: inExpression,
     status: inExpression,
     brand: likeExpression,
-    taxClass: inExpression
+    taxCode: inExpression
   };
   const returnFields = [
     'id',
@@ -33,11 +33,12 @@ function opFactory(base) {
     'description',
     'price',
     'salePrice',
+    'isNetPrice',
     'medias',
     'categories',
     'status',
     'brand',
-    'taxClass'
+    'taxCode'
   ];
   const defaultFields = returnFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);

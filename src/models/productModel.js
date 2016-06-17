@@ -36,13 +36,14 @@ function modelFactory(base) {
     categories: [{ type: String, required: true }],
     price: { type: Number, required: true },
     salePrice: { type: Number, required: false },
+    isNetPrice: { type: Boolean, required: true, default: false },
     medias: [mediaSchema],
     classifications: [classificationValuesSchema],
     modifiers: [{ type: String, required: false }],
     variants: [{ type: String, required: false, ref: 'Product' }],
     base: { type: String, required: false },
     variations: [variationsValuesSchema],
-    taxClass: { type: String, required: false }
+    taxCode: { type: String, required: false, default: 'default' }
   }, { _id: false, timestamps: true });
 
   // Enable the virtuals when converting to JSON
