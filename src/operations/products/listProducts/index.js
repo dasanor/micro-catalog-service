@@ -38,7 +38,12 @@ function opFactory(base) {
     'categories',
     'status',
     'brand',
-    'taxCode'
+    'taxCode',
+    'classifications',
+    'base',
+    'modifiers',
+    'variants',
+    'variations'
   ];
   const defaultFields = returnFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);
@@ -83,6 +88,7 @@ function opFactory(base) {
       // Query
       const query = base.db.models.Product
         .find(filters, fields)
+        .populate('variants')
         .skip(skip)
         .limit(limit);
 
