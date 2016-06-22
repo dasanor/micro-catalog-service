@@ -1,4 +1,5 @@
 const boom = require('boom');
+const slug = require('slugg');
 
 /**
  * ## `createCategory` operation factory
@@ -48,7 +49,7 @@ function opFactory(base) {
       const category = new base.db.models.Category({
         title: msg.title,
         description: msg.description,
-        slug: msg.slug,
+        slug: msg.slug || slug(msg.title),
         classifications: msg.classifications
       });
       let parentSearch = {};
@@ -68,13 +69,7 @@ function opFactory(base) {
           if (base.logger.isDebugEnabled()) base.logger.debug(`[category] category ${savedCategory._id} created`);
           return reply(savedCategory.toClient()).code(201);
         })
-        .catch(error => {
-          if (error.code === 11000 || error.code === 11001) {
-            return reply(boom.forbidden('duplicate key'));
-          }
-          base.logger.error(error);
-          return reply(boom.wrap(error));
-        });
+        .catch(error => reply(base.utils.genericErrorResponse(error)));
     }
   };
   return op;
