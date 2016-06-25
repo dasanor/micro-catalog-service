@@ -48,6 +48,7 @@ function opFactory(base) {
           if (productData.price) update.price = productData.price;
           if (productData.salePrice) update.salePrice = productData.salePrice;
           if (productData.isNetPrice) update.isNetPrice = productData.isNetPrice;
+          if (productData.stockStatus) update.stockStatus = productData.stockStatus;
           if (productData.medias) update.medias = productData.medias;
           if (productData.base) update.base = productData.base;
           if (productData.variations) update.variations = productData.variations;

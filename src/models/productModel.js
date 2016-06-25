@@ -3,6 +3,17 @@ const shortId = require('shortid');
 function modelFactory(base) {
   if (base.logger.isDebugEnabled()) base.logger.debug('[db] registering model Product');
 
+  const STOCKSTATUS = {
+    NORMAL: 0,
+    UNLIMITED: 1,
+    DISCONTINUED: 2
+  };
+
+  const STATUS = {
+    DRAFT: 'DRAFT',
+    ONLINE: 'ONLINE'
+  };
+
   // Variations Values Schema
   const variationsValuesSchema = base.db.Schema({
     id: { type: String, required: true },
@@ -29,7 +40,12 @@ function modelFactory(base) {
       }
     },
     sku: { type: String, required: true },
-    status: { type: String, required: false, default: 'DRAFT', enum: ['DRAFT', 'ONLINE'] },
+    status: {
+      type: String,
+      required: false,
+      default: 'DRAFT',
+      enum: Object.keys(STATUS).map(s => STATUS[s])
+    },
     title: { type: String, required: true },
     description: { type: String, required: false },
     brand: { type: String, required: false },
@@ -37,6 +53,12 @@ function modelFactory(base) {
     price: { type: Number, required: true },
     salePrice: { type: Number, required: false },
     isNetPrice: { type: Boolean, required: true, default: false },
+    stockStatus: {
+      type: Number,
+      required: true,
+      default: 0,
+      enum: Object.keys(STOCKSTATUS).map(s => STOCKSTATUS[s])
+    },
     medias: [mediaSchema],
     classifications: [classificationValuesSchema],
     modifiers: [{ type: String, required: false }],
@@ -76,8 +98,12 @@ function modelFactory(base) {
 
   schema.index({ sku: 1 }, { unique: true });
 
+  const model = base.db.model('Product', schema);
+  model.STOCKSTATUS = STOCKSTATUS;
+  model.STATUS = STATUS;
+
   // Add the model to mongoose
-  return base.db.model('Product', schema);
+  return model;
 }
 
 module.exports = modelFactory;

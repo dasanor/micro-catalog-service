@@ -13,6 +13,7 @@ function opFactory(base) {
   const checkClassifications = base.utils.loadModule('hooks:checkClassifications:handler');
   const checkVariants = base.utils.loadModule('hooks:checkVariants:handler');
   const productsChannel = base.config.get('channels:products');
+  const normalStockStatus = base.db.models.Product.STOCKSTATUS.NORMAL;
   /**
    * ## catalog.createProduct service
    *
@@ -46,8 +47,9 @@ function opFactory(base) {
             price: productData.price,
             salePrice: productData.salePrice || productData.price,
             isNetPrice: productData.isNetPrice,
+            stockStatus: productData.stockStatus || normalStockStatus,
             taxCode: productData.taxCode,
-            medias: productData.medias,
+            medias: productData.medias
           });
           if (productData.base) {
             product.base = productData.base;
