@@ -102,6 +102,27 @@ function modelFactory(base) {
   model.STOCKSTATUS = STOCKSTATUS;
   model.STATUS = STATUS;
 
+  model.returnFields = [
+    'id',
+    'sku',
+    'title',
+    'description',
+    'status',
+    'brand',
+    'taxCode',
+    'stockStatus',
+    'base',
+    'categories',
+    'price',
+    'salePrice',
+    'isNetPrice',
+    'medias',
+    'classifications',
+    'modifiers',
+    'variants',
+    'variations'
+  ];
+
   // Add the model to mongoose
   return model;
 }

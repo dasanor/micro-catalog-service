@@ -29,26 +29,7 @@ function opFactory(base) {
     base: inExpression,
     categories: inExpression
   };
-  const returnFields = [
-    'id',
-    'sku',
-    'title',
-    'description',
-    'status',
-    'brand',
-    'taxCode',
-    'stockStatus',
-    'base',
-    'categories',
-    'price',
-    'salePrice',
-    'isNetPrice',
-    'medias',
-    'classifications',
-    'modifiers',
-    'variants',
-    'variations'
-  ];
+  const returnFields = base.db.models.Product.returnFields;
   const defaultFields = returnFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);
   const defaultLimit = 10;
@@ -83,7 +64,10 @@ function opFactory(base) {
       let fields;
       if (params.fields) {
         fields = params.fields.split(',')
-          .filter(f => returnFields.indexOf(f) !== -1)
+          .filter(f => {
+            if (f.substr(0, 1) === '-') return returnFields.indexOf(f.substring(1)) !== -1;
+            return returnFields.indexOf(f) !== -1;
+          })
           .join(' ');
       } else {
         fields = defaultFields;

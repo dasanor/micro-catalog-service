@@ -9,6 +9,10 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
+
+  const returnFields = base.db.models.Product.returnFields;
+  const defaultFields = returnFields.join(' ');
+
   /**
    * ## catalog.getProduct service
    *
@@ -18,20 +22,35 @@ function opFactory(base) {
     name: 'getProduct',
     path: '/product/{id}',
     method: 'GET',
-    handler: ({id}, reply) => {
+    cache: {
+      expiresIn: 1000 * 60 * 60 // one hour
+    },
+    handler: (params, reply) => {
+      // Filter fields
+      let fields;
+      if (params.fields) {
+        fields = params.fields.split(',')
+          .filter(f => {
+            if (f.substr(0, 1) === '-') return returnFields.indexOf(f.substring(1)) !== -1;
+            return returnFields.indexOf(f) !== -1;
+          })
+          .join(' ');
+      } else {
+        fields = defaultFields;
+      }
+      // Query db
       base.db.models.Product
-        .findOne({ _id: id })
+        .findOne({ _id: params.id }, fields)
         .populate('variants')
         .exec()
         .then(product => {
-          if (!product) throw boom.notFound('Product not found');
+          if (!product) throw boom.notFound(`Product '${params.id}' not found`);
           return reply(product.toClient());
         })
         .catch(error => {
           if (!(error.isBoom || error.statusCode === 404)) base.logger.error(error);
           reply(boom.wrap(error));
         });
-
     }
   };
   return op;
