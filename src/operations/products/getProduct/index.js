@@ -12,6 +12,15 @@ function opFactory(base) {
 
   const returnFields = base.db.models.Product.returnFields;
   const defaultFields = returnFields.join(' ');
+  const productsChannel = base.config.get('channels:products');
+
+  // Listen to Product changes to clear the cache
+  base.events.listen(productsChannel, ({ type, data:product }) => {
+    if (type !== 'UPDATE' && type !== 'REMOVE') return;
+    console.log(type, product.id);
+    const cache = base.cache.get('products');
+    cache.drop(product.id);
+  });
 
   /**
    * ## catalog.getProduct service
@@ -23,7 +32,11 @@ function opFactory(base) {
     path: '/product/{id}',
     method: 'GET',
     cache: {
-      expiresIn: 1000 * 60 * 60 // one hour
+      options: {
+        expiresIn: 1000 * 60 * 60 // one hour
+      },
+      name: 'products',
+      keyGenerator: payload => payload.id
     },
     handler: (params, reply) => {
       // Filter fields
