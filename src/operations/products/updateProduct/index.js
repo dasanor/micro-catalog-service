@@ -40,21 +40,22 @@ function opFactory(base) {
           // Explicitly name allowed updates
           const update = {};
           if (productData.sku) update.sku = productData.sku;
-          if (productData.status) update.status = productData.status;
           if (productData.title) update.title = productData.title;
           if (productData.description) update.description = productData.description;
+          if (productData.status) update.status = productData.status;
+          if (productData.brand) update.brand = productData.brand;
+          if (productData.taxCode) update.taxCode = productData.taxCode;
+          if (productData.stockStatus) update.stockStatus = productData.stockStatus;
+          if (productData.base) update.base = productData.base;
           if (productData.categories) update.categories = productData.categories;
-          if (productData.classifications) update.classifications = productData.classifications;
           if (productData.price) update.price = productData.price;
           if (productData.salePrice) update.salePrice = productData.salePrice;
           if (productData.isNetPrice) update.isNetPrice = productData.isNetPrice;
-          if (productData.stockStatus) update.stockStatus = productData.stockStatus;
           if (productData.medias) update.medias = productData.medias;
-          if (productData.base) update.base = productData.base;
-          if (productData.variations) update.variations = productData.variations;
+          if (productData.classifications) update.classifications = productData.classifications;
           if (productData.modifiers) update.modifiers = productData.modifiers;
           if (productData.variants) update.variants = productData.variants;
-          if (productData.taxCode) update.taxCode = productData.taxCode;
+          if (productData.variations) update.variations = productData.variations;
           return base.db.models.Product
             .findOneAndUpdate({ _id: productData.id }, { $set: update }, { new: true })
             .exec();

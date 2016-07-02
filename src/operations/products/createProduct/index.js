@@ -38,18 +38,18 @@ function opFactory(base) {
           // Explicitly name allowed properties
           const product = new base.db.models.Product({
             sku: productData.sku,
-            status: productData.status || 'DRAFT',
             title: productData.title,
             description: productData.description,
+            status: productData.status || 'DRAFT',
             brand: productData.brand,
+            taxCode: productData.taxCode,
+            stockStatus: productData.stockStatus || normalStockStatus,
             categories: productData.categories || [],
-            classifications: productData.classifications || [],
             price: productData.price,
             salePrice: productData.salePrice || productData.price,
             isNetPrice: productData.isNetPrice,
-            stockStatus: productData.stockStatus || normalStockStatus,
-            taxCode: productData.taxCode,
-            medias: productData.medias
+            medias: productData.medias,
+            classifications: productData.classifications || []
           });
           if (productData.base) {
             product.base = productData.base;
