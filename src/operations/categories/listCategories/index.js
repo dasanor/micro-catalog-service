@@ -27,16 +27,8 @@ function opFactory(base) {
     parent: inExpression,
     path: startWithExpression
   };
-  const returnFields = [
-    'id',
-    'title',
-    'description',
-    'slug',
-    'parent',
-    'path',
-    'classifications'
-  ];
-  const defaultFields = returnFields.join(' ');
+  const selectableFields = base.db.models.Category.selectableFields;
+  const defaultFields = selectableFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);
   const defaultLimit = 10;
   const maxLimit = 100;
@@ -56,7 +48,8 @@ function opFactory(base) {
       const filters = allowedProperties
         .filter(k => params.hasOwnProperty(k))
         .reduce((result, k) => {
-          result[k] = filterExpressions[k](params[k]);
+          const field = k === 'id' ? '_id' : k;
+          result[field] = filterExpressions[k](params[k]);
           return result;
         }, {});
 
@@ -69,7 +62,10 @@ function opFactory(base) {
       let fields;
       if (params.fields) {
         fields = params.fields.split(',')
-          .filter(f => returnFields.indexOf(f) !== -1)
+          .filter(f => {
+            if (f.substr(0, 1) === '-') return selectableFields.indexOf(f.substring(1)) !== -1;
+            return selectableFields.indexOf(f) !== -1;
+          })
           .join(' ');
       } else {
         fields = defaultFields;

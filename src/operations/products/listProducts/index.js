@@ -29,8 +29,8 @@ function opFactory(base) {
     base: inExpression,
     categories: inExpression
   };
-  const returnFields = base.db.models.Product.returnFields;
-  const defaultFields = returnFields.join(' ');
+  const selectableFields = base.db.models.Product.selectableFields;
+  const defaultFields = selectableFields.join(' ');
   const allowedProperties = Object.keys(filterExpressions);
   const defaultLimit = 10;
   const maxLimit = 100;
@@ -65,8 +65,8 @@ function opFactory(base) {
       if (params.fields) {
         fields = params.fields.split(',')
           .filter(f => {
-            if (f.substr(0, 1) === '-') return returnFields.indexOf(f.substring(1)) !== -1;
-            return returnFields.indexOf(f) !== -1;
+            if (f.substr(0, 1) === '-') return selectableFields.indexOf(f.substring(1)) !== -1;
+            return selectableFields.indexOf(f) !== -1;
           })
           .join(' ');
       } else {

@@ -13,6 +13,7 @@ function opFactory(base) {
   const checkClassifications = base.utils.loadModule('hooks:checkClassifications:handler');
   const checkVariants = base.utils.loadModule('hooks:checkVariants:handler');
   const productsChannel = base.config.get('channels:products');
+  const updatableFields = base.db.models.Product.updatableFields;
   /**
    * ## catalog.updateProduct service
    *
@@ -23,51 +24,84 @@ function opFactory(base) {
     path: '/product/{id}',
     method: 'PUT',
     // TODO: create the product JsonSchema
-    handler: (productData, reply) => {
-      Promise.resolve(productData)
-        .then(productData => {
-          if (productData.categories) {
+    handler: (newData, reply) => {
+      const data = { newData };
+      Promise.resolve(data)
+        .then(data => {
+          return base.db.models.Product
+            .findById(data.newData.id)
+            .exec()
+            .then(product => {
+              if (!product) throw boom.notAcceptable(`Base product '${data.newData.id}' not found`);
+              data.oldProduct = product;
+              return data;
+            });
+        })
+        .then(data => {
+          if (data.newData.categories) {
             // Deduplicate category codes
-            productData.categories = [...new Set(productData.categories)];
-            // Check categories existence
-            return checkCategories(productData)
-              .then(categories => checkClassifications(productData, categories))
+            data.newData.categories = [...new Set(data.newData.categories)];
+            // Check categories / classifications
+            return checkCategories(data.newData)
+              .then(categories => checkClassifications(data.newData, categories))
+              .then(() => data);
           }
-          return productData;
+          return data;
         })
         .then(checkVariants)
-        .then(() => {
-          // Explicitly name allowed updates
-          const update = {};
-          if (productData.sku) update.sku = productData.sku;
-          if (productData.title) update.title = productData.title;
-          if (productData.description) update.description = productData.description;
-          if (productData.status) update.status = productData.status;
-          if (productData.brand) update.brand = productData.brand;
-          if (productData.taxCode) update.taxCode = productData.taxCode;
-          if (productData.stockStatus) update.stockStatus = productData.stockStatus;
-          if (productData.base) update.base = productData.base;
-          if (productData.categories) update.categories = productData.categories;
-          if (productData.price) update.price = productData.price;
-          if (productData.salePrice) update.salePrice = productData.salePrice;
-          if (productData.isNetPrice) update.isNetPrice = productData.isNetPrice;
-          if (productData.medias) update.medias = productData.medias;
-          if (productData.classifications) update.classifications = productData.classifications;
-          if (productData.modifiers) update.modifiers = productData.modifiers;
-          if (productData.variants) update.variants = productData.variants;
-          if (productData.variations) update.variations = productData.variations;
+        .then(() => data)
+        .then(data => {
+          // Allow updates only on explicitly names properties
+          const update = updatableFields
+            .filter(f => data.newData[f] !== undefined)
+            .reduce((result, f) => {
+              result[f] = data.newData[f];
+              return result;
+            }, {});
           return base.db.models.Product
-            .findOneAndUpdate({ _id: productData.id }, { $set: update }, { new: true })
-            .exec();
+            .findOneAndUpdate({ _id: data.newData.id }, { $set: update }, { new: true })
+            .exec()
+            .then(savedProduct => {
+              data.savedProduct = savedProduct;
+              return data;
+            });
         })
-        .then(savedProduct => {
-          if (!savedProduct) throw (boom.notFound('Product not found'));
+        .then(data => {
+          if (!data.savedProduct) throw (boom.notFound('Product not saved'));
           // Send a products UPDATE event
-          base.events.send(productsChannel, 'UPDATE', savedProduct.toObject({ virtuals: true }));
-          if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${savedProduct._id} updated`);
+          base.events.send(productsChannel, 'UPDATE', {
+            new: data.savedProduct.toObject({ virtuals: true }),
+            old: data.oldProduct,
+            data: data.newData
+          });
+          if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${data.savedProduct._id} updated`);
           // Return the product to the client
-          return reply(savedProduct.toClient());
+          return data;
         })
+        .then(data => {
+          if (data.savedProduct.base) {
+            return base.db.models.Product
+              .findOneAndUpdate({
+                _id: data.savedProduct.base
+              }, {
+                $addToSet: { variants: data.savedProduct.id }
+              })
+              .exec()
+              .then(() => {
+                return base.db.models.Product
+                  .findOneAndUpdate({
+                    variants: { $all: [data.savedProduct.id] },
+                    _id: { $ne: data.savedProduct.base }
+                  }, {
+                    $pull: { variants: data.savedProduct.id }
+                  })
+                  .exec()
+                  .then(() => data);
+              });
+          }
+          return data;
+        })
+        .then(data => reply(data.savedProduct.toClient()))
         .catch(error => reply(base.utils.genericErrorResponse(error)));
     }
   };

@@ -102,8 +102,28 @@ function modelFactory(base) {
   model.STOCKSTATUS = STOCKSTATUS;
   model.STATUS = STATUS;
 
-  model.returnFields = [
+  model.selectableFields = [
     'id',
+    'sku',
+    'title',
+    'description',
+    'status',
+    'brand',
+    'taxCode',
+    'stockStatus',
+    'base',
+    'categories',
+    'price',
+    'salePrice',
+    'isNetPrice',
+    'medias',
+    'classifications',
+    'modifiers',
+    'variants',
+    'variations'
+  ];
+
+  model.updatableFields = [
     'sku',
     'title',
     'description',

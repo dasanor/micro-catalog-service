@@ -30,5 +30,8 @@
   ],
   "channels": {
     "products": "PRODUCTS"
+  },
+  "cache": {
+    "products": 3600000
   }
 }

@@ -62,7 +62,12 @@ function opFactory(base) {
         })
         .then(savedProduct => {
           // Send a products CREATE event
-          base.events.send(productsChannel, 'CREATE', savedProduct.toObject({ virtuals: true }));
+          base.events.send(productsChannel, 'CREATE',
+            {
+              new: savedProduct.toObject({ virtuals: true }),
+              data: productData
+            }
+          );
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${savedProduct._id} created`);
           return savedProduct;
         })
@@ -72,7 +77,7 @@ function opFactory(base) {
               .findOneAndUpdate({
                 _id: savedProduct.base
               }, {
-                $push: { variants: savedProduct.id }
+                $addToSet: { variants: savedProduct.id }
               })
               .exec()
               .then(() => savedProduct);

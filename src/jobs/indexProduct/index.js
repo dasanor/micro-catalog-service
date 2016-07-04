@@ -15,28 +15,28 @@ function jobFactory(base) {
     });
   }
 
-  return ({ type, data:product }, done) => {
-    if ((type === 'CREATE' || type === 'UPDATE') && !product.modifiers[0] && product.status === 'ONLINE') {
+  return ({ type, data }, done) => {
+    if ((type === 'CREATE' || type === 'UPDATE') && !data.new.modifiers[0] && data.new.status === 'ONLINE') {
       base.search.index({
           index: searchIndex,
           type: searchType,
-          id: product.id,
+        id: data.new.id,
           body: {
-            sku: product.sku,
-            status: product.status,
-            title: product.title,
-            description: product.description,
-            brand: product.brand,
-            categories: product.categories,
-            classifications: product.classifications.reduce((result, k) => {
+            sku: data.new.sku,
+            status: data.new.status,
+            title: data.new.title,
+            description: data.new.description,
+            brand: data.new.brand,
+            categories: data.new.categories,
+            classifications: data.new.classifications.reduce((result, k) => {
               result[k.id] = k.value;
               return result;
             }, {}),
-            price: product.price,
-            salePrice: product.salePrice,
-            medias: product.medias,
-            base: product.base,
-            variations: product.variations
+            price: data.new.price,
+            salePrice: data.new.salePrice,
+            medias: data.new.medias,
+            base: data.new.base,
+            variations: data.new.variations
           }
         })
         .then(() => {
@@ -46,13 +46,13 @@ function jobFactory(base) {
           base.logger.error(`[catalog] indexing saved product ${error}`);
           return done(error);
       });
-    } else if (type === 'REMOVE' || product.status !== 'ONLINE') {
+    } else if (type === 'REMOVE' || data.new.status !== 'ONLINE') {
       base.search.delete({
-          index: searchIndex,
-          type: searchType,
-          id: product.id,
-          ignore: [404]
-        })
+        index: searchIndex,
+        type: searchType,
+        id: data.old.id,
+        ignore: [404]
+      })
         .then(() => {
           return done();
         })

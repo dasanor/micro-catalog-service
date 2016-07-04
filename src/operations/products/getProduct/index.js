@@ -10,16 +10,17 @@ const boom = require('boom');
  */
 function opFactory(base) {
 
-  const returnFields = base.db.models.Product.returnFields;
-  const defaultFields = returnFields.join(' ');
+  const selectableFields = base.db.models.Product.selectableFields;
+  const defaultFields = selectableFields.join(' ');
   const productsChannel = base.config.get('channels:products');
 
   // Listen to Product changes to clear the cache
-  base.events.listen(productsChannel, ({ type, data:product }) => {
+  base.events.listen(productsChannel, ({ type, data }) => {
     if (type !== 'UPDATE' && type !== 'REMOVE') return;
-    console.log(type, product.id);
     const cache = base.cache.get('products');
-    cache.drop(product.id);
+    cache.drop(data.old.id);
+    if (data.old.base) cache.drop(data.old.base);
+    if (data.new.base && data.new.base !== data.old.base) cache.drop(data.new.base);
   });
 
   /**
@@ -33,7 +34,7 @@ function opFactory(base) {
     method: 'GET',
     cache: {
       options: {
-        expiresIn: 1000 * 60 * 60 // one hour
+        expiresIn: base.config.get('cache:products')
       },
       name: 'products',
       keyGenerator: payload => payload.id
@@ -44,8 +45,8 @@ function opFactory(base) {
       if (params.fields) {
         fields = params.fields.split(',')
           .filter(f => {
-            if (f.substr(0, 1) === '-') return returnFields.indexOf(f.substring(1)) !== -1;
-            return returnFields.indexOf(f) !== -1;
+            if (f.substr(0, 1) === '-') return selectableFields.indexOf(f.substring(1)) !== -1;
+            return selectableFields.indexOf(f) !== -1;
           })
           .join(' ');
       } else {

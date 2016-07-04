@@ -49,8 +49,20 @@ function modelFactory(base) {
 
   schema.index({ parent: 1, slug: 1 }, { unique: true });
 
+  const model = base.db.model('Category', schema);
+
+  model.selectableFields = [
+    'id',
+    'title',
+    'description',
+    'slug',
+    'parent',
+    'path',
+    'classifications'
+  ];
+
   // Add the model to mongoose
-  return base.db.model('Category', schema);
+  return model;
 }
 
 module.exports = modelFactory;
