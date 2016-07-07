@@ -9,7 +9,7 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
-  const productsChannel = base.config.get('channels:products');
+  const productsChannel = base.config.get('bus:channels:products:name');
   /**
    * ## catalog.removeProduct service
    *
@@ -20,13 +20,15 @@ function opFactory(base) {
     path: '/product/{id}',
     method: 'DELETE',
     handler: ({ id }, reply) => {
+      // TODO: Don't allow removes if it has variants.
+      // TODO: Don't allow removes if it has reserves.
       base.db.models.Product
         .findOneAndRemove({ _id: id })
         .exec()
         .then(removedProduct => {
           if (!removedProduct) throw (boom.notFound('Product not found'));
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${removedProduct.id} removed`);
-          base.events.send(productsChannel, 'REMOVE',
+          base.bus.publish(`${productsChannel}.REMOVE`,
             {
               old: removedProduct.toObject({ virtuals: true })
             }

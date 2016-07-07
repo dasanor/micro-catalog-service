@@ -28,10 +28,24 @@
       "handler": "./jobs/indexProduct"
     }
   ],
-  "channels": {
-    "products": "PRODUCTS"
-  },
   "cache": {
     "products": 3600000
+  },
+  "bus": {
+    "engines": {
+      "local": {
+        "handler": "./local"
+      },
+      "amqp": {
+        "handler": "./amqp",
+        "url": "amqp://localhost"
+      }
+    },
+    "channels": {
+      "products": {
+        "name": "PRODUCTS",
+        "engine": "amqp"
+      }
+    }
   }
 }

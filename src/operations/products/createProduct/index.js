@@ -12,7 +12,7 @@ function opFactory(base) {
   const checkCategories = base.utils.loadModule('hooks:checkCategories:handler');
   const checkClassifications = base.utils.loadModule('hooks:checkClassifications:handler');
   const checkVariants = base.utils.loadModule('hooks:checkVariants:handler');
-  const productsChannel = base.config.get('channels:products');
+  const productsChannel = base.config.get('bus:channels:products:name');
   const normalStockStatus = base.db.models.Product.STOCKSTATUS.NORMAL;
   /**
    * ## catalog.createProduct service
@@ -62,7 +62,7 @@ function opFactory(base) {
         })
         .then(savedProduct => {
           // Send a products CREATE event
-          base.events.send(productsChannel, 'CREATE',
+          base.bus.publish(`${productsChannel}.CREATE`,
             {
               new: savedProduct.toObject({ virtuals: true }),
               data: productData

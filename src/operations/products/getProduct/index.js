@@ -12,10 +12,10 @@ function opFactory(base) {
 
   const selectableFields = base.db.models.Product.selectableFields;
   const defaultFields = selectableFields.join(' ');
-  const productsChannel = base.config.get('channels:products');
+  const productsChannel = base.config.get('bus:channels:products:name');
 
   // Listen to Product changes to clear the cache
-  base.events.listen(productsChannel, ({ type, data }) => {
+  base.bus.subscribe(`${productsChannel}.*`, ({ type, data }) => {
     if (type !== 'UPDATE' && type !== 'REMOVE') return;
     const cache = base.cache.get('products');
     cache.drop(data.old.id);

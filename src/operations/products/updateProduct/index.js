@@ -12,7 +12,7 @@ function opFactory(base) {
   const checkCategories = base.utils.loadModule('hooks:checkCategories:handler');
   const checkClassifications = base.utils.loadModule('hooks:checkClassifications:handler');
   const checkVariants = base.utils.loadModule('hooks:checkVariants:handler');
-  const productsChannel = base.config.get('channels:products');
+  const productsChannel = base.config.get('bus:channels:products:name');
   const updatableFields = base.db.models.Product.updatableFields;
   /**
    * ## catalog.updateProduct service
@@ -51,6 +51,7 @@ function opFactory(base) {
         .then(checkVariants)
         .then(() => data)
         .then(data => {
+          // TODO: Don't allow status changes if it has reserves
           // Allow updates only on explicitly names properties
           const update = updatableFields
             .filter(f => data.newData[f] !== undefined)
@@ -69,9 +70,9 @@ function opFactory(base) {
         .then(data => {
           if (!data.savedProduct) throw (boom.notFound('Product not saved'));
           // Send a products UPDATE event
-          base.events.send(productsChannel, 'UPDATE', {
+          base.bus.publish(`${productsChannel}.UPDATE`, {
             new: data.savedProduct.toObject({ virtuals: true }),
-            old: data.oldProduct,
+            old: data.oldProduct.toObject({ virtuals: true }),
             data: data.newData
           });
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${data.savedProduct._id} updated`);
