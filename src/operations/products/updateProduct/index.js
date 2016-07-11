@@ -1,5 +1,3 @@
-const boom = require('boom');
-
 /**
  * ## `updateProduct` operation factory
  *
@@ -9,11 +7,7 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
-  const checkCategories = base.utils.loadModule('hooks:checkCategories:handler');
-  const checkClassifications = base.utils.loadModule('hooks:checkClassifications:handler');
-  const checkVariants = base.utils.loadModule('hooks:checkVariants:handler');
-  const productsChannel = base.config.get('bus:channels:products:name');
-  const updatableFields = base.db.models.Product.updatableFields;
+  const updateProductChain = new base.utils.Chain().use('updateProductChain');
   /**
    * ## catalog.updateProduct service
    *
@@ -25,84 +19,12 @@ function opFactory(base) {
     method: 'PUT',
     // TODO: create the product JsonSchema
     handler: (newData, reply) => {
-      const data = { newData };
-      Promise.resolve(data)
-        .then(data => {
-          return base.db.models.Product
-            .findById(data.newData.id)
-            .exec()
-            .then(product => {
-              if (!product) throw boom.notAcceptable(`Base product '${data.newData.id}' not found`);
-              data.oldProduct = product;
-              return data;
-            });
-        })
-        .then(data => {
-          if (data.newData.categories) {
-            // Deduplicate category codes
-            data.newData.categories = [...new Set(data.newData.categories)];
-            // Check categories / classifications
-            return checkCategories(data.newData)
-              .then(categories => checkClassifications(data.newData, categories))
-              .then(() => data);
-          }
-          return data;
-        })
-        .then(checkVariants)
-        .then(() => data)
-        .then(data => {
-          // TODO: Don't allow status changes if it has reserves
-          // Allow updates only on explicitly names properties
-          const update = updatableFields
-            .filter(f => data.newData[f] !== undefined)
-            .reduce((result, f) => {
-              result[f] = data.newData[f];
-              return result;
-            }, {});
-          return base.db.models.Product
-            .findOneAndUpdate({ _id: data.newData.id }, { $set: update }, { new: true })
-            .exec()
-            .then(savedProduct => {
-              data.savedProduct = savedProduct;
-              return data;
-            });
-        })
-        .then(data => {
-          if (!data.savedProduct) throw (boom.notFound('Product not saved'));
-          // Send a products UPDATE event
-          base.bus.publish(`${productsChannel}.UPDATE`, {
-            new: data.savedProduct.toObject({ virtuals: true }),
-            old: data.oldProduct.toObject({ virtuals: true }),
-            data: data.newData
-          });
-          if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${data.savedProduct._id} updated`);
-          // Return the product to the client
-          return data;
-        })
-        .then(data => {
-          if (data.savedProduct.base) {
-            return base.db.models.Product
-              .findOneAndUpdate({
-                _id: data.savedProduct.base
-              }, {
-                $addToSet: { variants: data.savedProduct.id }
-              })
-              .exec()
-              .then(() => {
-                return base.db.models.Product
-                  .findOneAndUpdate({
-                    variants: { $all: [data.savedProduct.id] },
-                    _id: { $ne: data.savedProduct.base }
-                  }, {
-                    $pull: { variants: data.savedProduct.id }
-                  })
-                  .exec()
-                  .then(() => data);
-              });
-          }
-          return data;
-        })
-        .then(data => reply(data.savedProduct.toClient()))
+      const context = {
+        newData,
+      };
+      updateProductChain
+        .exec(context)
+        .then(() => reply(context.savedProduct.toClient()))
         .catch(error => reply(base.utils.genericErrorResponse(error)));
     }
   };

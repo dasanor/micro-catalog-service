@@ -7,16 +7,20 @@
     "productModel": "./models/productModel",
     "categoryModel": "./models/categoryModel"
   },
-  "hooks": {
-    "checkCategories": {
-      "handler": "./operations/products/createProduct/hooks/checkCategories"
-    },
-    "checkClassifications": {
-      "handler": "./operations/products/createProduct/hooks/checkClassifications"
-    },
-    "checkVariants": {
-      "handler": "./operations/products/createProduct/hooks/checkVariants"
-    }
+  "createProductChain": {
+    "checkCategories": "./operations/products/createProduct/hooks/checkCategories",
+    "checkClassifications": "./operations/products/createProduct/hooks/checkClassifications",
+    "checkVariants": "./operations/products/createProduct/hooks/checkVariants",
+    "saveProduct": "./operations/products/createProduct/hooks/saveProduct",
+    "postSaveProduct": "./operations/products/createProduct/hooks/postSaveProduct"
+  },
+  "updateProductChain": {
+    "getProduct": "./operations/products/updateProduct/hooks/getProduct",
+    "checkCategories": "./operations/products/createProduct/hooks/checkCategories",
+    "checkClassifications": "./operations/products/createProduct/hooks/checkClassifications",
+    "checkVariants": "./operations/products/createProduct/hooks/checkVariants",
+    "saveProduct": "./operations/products/updateProduct/hooks/saveProduct",
+    "postSaveProduct": "./operations/products/updateProduct/hooks/postSaveProduct"
   },
   "maxCategoriesPerProduct": 5,
   "search": {

@@ -1,89 +1,89 @@
 const boom = require('boom');
 
-function checkVariants(base) {
-  return (data) => {
+function factory(base) {
+  return (context, next) => {
 
     // Cannot mix base & variant data
-    if ((data.newData.variants || data.newData.modifiers)
-      && (data.newData.base || data.newData.variations)) {
-      throw boom.notAcceptable('Inconsistent base/variants data');
+    if ((context.newData.variants || context.newData.modifiers)
+      && (context.newData.base || context.newData.variations)) {
+      return next(boom.notAcceptable('Inconsistent base/variants data'));
     }
 
-    if ((data.newData.base && !data.newData.variations)
-      || data.newData.variations && !data.newData.base) {
-      throw boom.notAcceptable('Inconsistent base/variations data');
+    if ((context.newData.base && !context.newData.variations)
+      || context.newData.variations && !context.newData.base) {
+      return next(boom.notAcceptable('Inconsistent base/variations data'));
     }
 
-    if (data.newData.base) {
+    if (context.newData.base) {
       // VARIANT
+      //
       // base: "ID01"
       // variations: [
       //   {id: "color", value: "Azul"}
       //   {id: "size", value: "38"}
       // ]
-      return Promise
-        .resolve(data)
-        .then(data => {
-          // Find base product
-          return base.db.models.Product
-            .findById(data.newData.base)
-            .exec();
-        })
+
+      // Find base product
+      base.db.models.Product
+        .findById(context.newData.base)
+        .exec()
         .then(baseProduct => {
-          if (!baseProduct) throw boom.notAcceptable(`Base product '${data.newData.base}' not found`);
+          if (!baseProduct) throw boom.notAcceptable(`Base product '${context.newData.base}' not found`);
           // Check variations against the base Product modifications, while filtering them
           const filteredVariations = [];
           baseProduct.modifiers.forEach(modifier => {
-            const variation = data.newData.variations.find(v => v.id === modifier);
+            const variation = context.newData.variations.find(v => v.id === modifier);
             if (!variation || !variation.value) {
               throw boom.notAcceptable(`Variation '${modifier}' not found`);
             }
             filteredVariations.push(variation);
           });
           // Only use the filtered variations
-          data.newData.variations = filteredVariations;
-          return productData;
-        });
-    } else if (data.newData.modifiers) {
+          context.newData.variations = filteredVariations;
+          next();
+        })
+        .catch(next);
+    } else if (context.newData.modifiers) {
       // BASE PRODUCT
+      //
       // modifiers: ["color", "size"],
       // variants: [ID02, ID03, ID04] <-= Generated
 
       // There should be some modifier
-      if (data.newData.modifiers.length === 0) {
-        throw boom.notAcceptable('No modifiers found');
+      if (context.newData.modifiers.length === 0) {
+        return next(boom.notAcceptable('No modifiers found'));
       }
 
       // If it's a create (we have an id), don't check variants (There isn't any yet)
-      if (!data.newData.id) return productData;
+      if (!context.newData.id) return next();
 
-      return Promise
-        .resolve(data)
-        .then(data => {
-          // For each Variant check the variations
-          const promises = [];
-          data.oldProduct.variants.map(variantId => {
-            return promises.push(new Promise((resolve, reject) => {
-              // Find the Variant
-              base.db.models.Product
-                .findById(variantId)
-                .then(variant => {
-                  if (!variant) reject(`Variant '${variantId}' not found`);
-                  // Check variations against the base Product modifications
-                  data.newData.modifiers.forEach(modifier => {
-                    const variation = variant.variations.find(v => v.id === modifier);
-                    if (!variation || !variation.value) {
-                      reject(boom.notAcceptable(`Variation '${modifier}' not found in variant ${variantId}`));
-                    }
-                  });
-                  resolve();
-                });
-            }));
-          });
-          return Promise.all(promises).then(() => data);
+      // For each Variant check the variations
+      const promises = context.oldProduct.variants.map(variantId => {
+        return new Promise((resolve, reject) => {
+          // Find the Variant
+          base.db.models.Product
+            .findById(variantId)
+            .then(variant => {
+              if (!variant) reject(`Variant '${variantId}' not found`);
+              // Check variations against the base Product modifications
+              context.newData.modifiers.forEach(modifier => {
+                const variation = variant.variations.find(v => v.id === modifier);
+                if (!variation || !variation.value) {
+                  reject(boom.notAcceptable(`Variation '${modifier}' not found in variant ${variantId}`));
+                }
+              });
+              resolve();
+            });
         });
+      });
+      Promise
+        .all(promises)
+        .then(() => next())
+        .catch(next);
+    } else {
+      next();
     }
   };
 }
 
-module.exports = checkVariants;
+module.exports = factory;

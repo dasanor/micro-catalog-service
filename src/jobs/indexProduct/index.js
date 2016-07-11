@@ -46,8 +46,8 @@ function jobFactory(base) {
         .catch(error => {
           base.logger.error(`[catalog] indexing saved product ${error}`);
           return done(error);
-      });
-    } else if (type === 'REMOVE' || data.new.status !== 'ONLINE') {
+        });
+    } else if (type === 'REMOVE' || (type === 'UPDATE' && data.new.status !== 'ONLINE' && data.old.status === 'ONLINE')) {
       base.search.delete({
         index: searchIndex,
         type: searchType,
