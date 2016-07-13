@@ -1,9 +1,6 @@
 # micro-catalog-service
 
-Ecommerce Catalog service using micro-base framework (beta).
-
-Micro-base is a small framework to define and call services, and gives some basic utilities like config, logging, jobs and MongoDB access.
-More info abot the framework [here](https://github.com/ncornag/micro-base/tree/develop).
+Ecommerce Catalog service, part of the [microbase](http://microbase.io) ecosystem.
 
 # Features
 
@@ -15,7 +12,7 @@ Field | Description| Required | Default
 ------|------------|----------|--------
 id | Internal unique product identifier | yes | System generated
 sku | Unique stock keeping unit identifier | yes  |  -
-status| Status of the Product [ONLINE|DRAFT]. Only ONLINE Products are indexed and salable | yes | 'DRAFT' 
+status| Status of the Product [ONLINE/DRAFT]. Only ONLINE Products are indexed and salable | yes | 'DRAFT' 
 title | Product title to show in the store | yes | - 
 description | Product description | no | - 
 brand | The Product Brand | no |  -
@@ -23,7 +20,7 @@ categories | A list of categories the Product belongs to | yes | -
 price | The Product base price | yes |  -
 salePrice | The Product sale price | no | The Product price
 isNetPrice | Defines the price as Net of Gross | no | -
-stockStatus | [0|1|2] (0: NORMAL, 1:UNLIMITED, 2:DISCONTINUED) | yes | 0
+stockStatus | [0/1/2] (0: NORMAL, 1:UNLIMITED, 2:DISCONTINUED) | yes | 0
 medias: | List of urls pointing to images [{id: '100x100', url: 'http://myserver.com/images/myimage100x100.jpg'}] | no | - 
 classifications | If the Product belogs to a Category with classifications, a list of classification values [{id: 'color', value: 'Grey'}] | no | -
 base: | In a Variant Product, the Parent Product id | no | -
