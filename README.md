@@ -1,4 +1,4 @@
-# micro-catalog-service
+# Catalog Service
 
 Ecommerce Catalog service, part of the [microbase](http://microbase.io) 
 ecosystem.
@@ -12,7 +12,9 @@ ecosystem.
 * Taxes per product
 * Stock status per product
 
-## Products
+# Entities
+
+**Product**
 
 Items you could add tothe Cart.
 
@@ -37,7 +39,7 @@ variants | In a Base Product, a list of child Variant Products ids | String List
 modifiers | In a Base Product, a list of product modifiers [{'color', 'size'}] | Object List | no | -
 taxCode | Tax code applicable to this product | String | no | 'default'  
   
-## Categories
+**Category**
 
 The Categories allows the Product organization in an hierarchically way. 
 The `ROOT` default Category is the parent of all Categories.
@@ -65,7 +67,7 @@ parent | Parent Category | String | no | ROOT
 path | Representation of the Category hierarchy with their ids. i.e: `ROOT.rJWB4cSr.B1-Zr45Br` | String | no | - 
 classifications | List of classifications the product must have to belog to this Category | String List | no | - 
 
-## Variants
+# Variants
   When you have the same product in several sizes and/or color you could 
   use the Variants System.
   
@@ -133,7 +135,7 @@ classifications | List of classifications the product must have to belog to this
 
 ```
 
-## Classifications
+# Classifications
 
 The Products can belong to Categories with a Classification System 
 defined. In that case, the Product must fill the classifications defined 
@@ -168,18 +170,18 @@ navigation when the user search Products.
 }
 ```
 
-## Indexing
+# Indexing
 
 The system uses [elasticsearch](https://www.elastic.co/products/elasticsearch) 
 to index and search Products.
 
-## API
+# API
 
 The full API documentation can be accessed in the microbase web http://api.microbase.io 
 and provide access to the Products and Categories endpoints to create, 
 modify and delete them:
 
-### Categories
+## Categories
 
 Name | Description | Method | Endpoint
 -----|-------------|--------|---------
@@ -190,7 +192,7 @@ catalog:removeCategory | Removes a Category | `DELETE` | `/services/catalog/v1/c
 catalog:listCategories | Search Categories and filter fields | `GET` | `/services/catalog/v1/category`
 catalog:getCategoryChildren | Get a Category child Categories recursively | `GET` | `/services/catalog/v1/category/{categoryId}/children`
 
-### Products
+## Products
 
 Name | Description | Method | Endpoint
 -----|-------------|--------|---------
