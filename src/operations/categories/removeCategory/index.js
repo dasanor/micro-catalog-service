@@ -1,7 +1,5 @@
-const boom = require('boom');
-
 /**
- * ## `removeCategory` operation factory
+ * ## `category.remove` operation factory
  *
  * Remove Category operation
  *
@@ -9,27 +7,20 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
-  /**
-   * ## catalog.removeCategory service
-   *
-   * Removes a Category
-   */
   const op = {
-    name: 'removeCategory',
-    path: '/category/{id}',
-    method: 'DELETE',
-    handler: ({id}, reply) => {
+    name: 'category.remove',
+    handler: ({ id }, reply) => {
       // findOneAndRemove not used to allow the tree plugin to do their job
       base.db.models.Category
         .findOne({ _id: id })
         .then(category => {
-          if (!category) throw (boom.notFound('Category not found'));
+          if (!category) throw base.utils.Error('category_not_found', id);
           return base.db.models.Product
             .find({ categories: category._id }, { _id: 1 })
             .limit(1)
             .exec()
             .then(productsInThisCategory => {
-              if (productsInThisCategory[0]) throw boom.notAcceptable(`Category not empty`);
+              if (productsInThisCategory[0]) throw base.utils.Error('category_not_empty');
               return category;
             });
         })
@@ -37,14 +28,11 @@ function opFactory(base) {
           return category.remove();
         })
         .then(removedCategory => {
-          if (!removedCategory) throw (boom.notFound('Category not found'));
+          if (!removedCategory) throw  base.utils.Error('category_not_found', id);
           if (base.logger.isDebugEnabled()) base.logger.debug(`[category] category ${removedCategory._id} removed`);
-          return reply().code(204);
+          return reply(base.utils.genericResponse());
         })
-        .catch(error => {
-          if (!(error.isBoom || error.statusCode == 404)) base.logger.error(error);
-          reply(boom.wrap(error));
-        });
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;

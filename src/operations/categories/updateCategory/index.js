@@ -1,7 +1,5 @@
-const boom = require('boom');
-
 /**
- * ## `updateCategory` operation factory
+ * ## `category.update` operation factory
  *
  * Update Category operation
  *
@@ -9,22 +7,15 @@ const boom = require('boom');
  * @return {Function} The operation factory
  */
 function opFactory(base) {
-  /**
-   * ## catalog.updateCategory service
-   *
-   * Creates a new Category
-   */
   const op = {
-    name: 'updateCategory',
-    path: '/category/{id}',
-    method: 'PUT',
+    name: 'category.update',
     // TODO: create the category JsonSchema
     handler: (msg, reply) => {
       // findOneAndUpdate not used to allow the tree plugin to do their job
       base.db.models.Category
         .findOne({ _id: msg.id })
         .then(category => {
-          if (!category) throw (boom.notFound('Category not found'));
+          if (!category) throw base.utils.Error('category_not_found', id);
           // Explicitly name allowed updates
           if (msg.title) category.title = msg.title;
           if (msg.description) category.description = msg.description;
@@ -34,7 +25,7 @@ function opFactory(base) {
             return base.db.models.Category
               .findOne({ _id: msg.parent })
               .then(parent => {
-                if (!parent) throw boom.notFound('Parent Category not found');
+                if (!parent) throw base.utils.Error('parent_category_not_found', msg.parent);
                 category.parent = parent;
                 return category;
               });
@@ -46,12 +37,9 @@ function opFactory(base) {
         })
         .then(savedCategory => {
           if (base.logger.isDebugEnabled()) base.logger.debug(`[category] category ${savedCategory._id} updated`);
-          return reply(savedCategory.toClient());
+          return (reply(base.utils.genericResponse({ category: savedCategory.toClient() })));
         })
-        .catch(error => {
-          if (!(error.isBoom || error.statusCode == 404)) base.logger.error(error);
-          reply(boom.wrap(error));
-        });
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;

@@ -1,8 +1,7 @@
-const boom = require('boom');
 const slug = require('slugg');
 
 /**
- * ## `createCategory` operation factory
+ * ## `category.create` operation factory
  *
  * Create Category operation
  *
@@ -34,16 +33,8 @@ function opFactory(base) {
       }
     });
 
-
-  /**
-   * ## catalog.createCategory service
-   *
-   * Creates a new Category
-   */
   const op = {
-    name: 'createCategory',
-    path: '/category',
-    method: 'POST',
+    name: 'category.create',
     // TODO: create the category JsonSchema
     handler: (msg, reply) => {
       const category = new base.db.models.Category({
@@ -61,15 +52,15 @@ function opFactory(base) {
       base.db.models.Category
         .findOne(parentSearch)
         .then(parent => {
-          if (!parent) throw boom.notFound('Parent Category not found');
+          if (!parent) throw base.utils.Error('parent_category_not_found', msg.parent);
           category.parent = parent;
           return category.save();
         })
         .then(savedCategory => {
           if (base.logger.isDebugEnabled()) base.logger.debug(`[category] category ${savedCategory._id} created`);
-          return reply(savedCategory.toClient()).code(201);
+          return (reply(base.utils.genericResponse({ category: savedCategory.toClient() })));
         })
-        .catch(error => reply(base.utils.genericErrorResponse(error)));
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;

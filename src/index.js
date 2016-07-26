@@ -17,6 +17,5 @@ base.services.add(require('./operations/categories/getCategory')(base));
 base.services.add(require('./operations/categories/listCategories')(base));
 base.services.add(require('./operations/categories/updateCategory')(base));
 base.services.add(require('./operations/categories/removeCategory')(base));
-base.services.add(require('./operations/categories/getCategoryChildren')(base));
 
 module.exports = base;

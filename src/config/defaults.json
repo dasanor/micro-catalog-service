@@ -1,7 +1,8 @@
 {
   "services": {
     "name": "catalog",
-    "version": "v1"
+    "version": "v1",
+    "style": "RPC"
   },
   "models": {
     "productModel": "./models/productModel",

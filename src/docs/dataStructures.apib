@@ -6,6 +6,25 @@
 + slug:cat01 (required, string) - The Category slug to use in paths. Parent+slug must be unique.
 + level:2 (required, number) - The Category level in the hierarchy.
 
+## CategoryResponseOk (object)
++ ok:true (required, string) - Success indicator
++ category (required, Category) - A Category object
+
+## CategoryResponseNoParent (object)
++ ok:false (required, string) - Failure indicator
++ error:parent_category_not_found (required, string) - Parent Category not found
++ data:xxxx (required, string) - The category id not found
+
+## CategoryResponseDuplicateKey (object)
++ ok:false (required, string) - Failure indicator
++ error:duplicate_key (required, string) - Some unique key violation
++ data:E11000 duplicate key error index: micro.categories.$slug_1 dup key: { : "category01" } (required, string) - The database error  
+
+## CategoryResponseValidationError (object)
++ ok:false (required, string) - Failure indicator
++ error:validation_error (required, string) - Some validation error
++ data:['title: Path `title` is required.'] (required, string) - The validation errors  
+
 ## CategoryRequest (object)
 + title:Category 01 (required, string) - The Category title.
 + description:This is the Category 01 (required, string) - The Category description.

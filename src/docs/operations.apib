@@ -1,24 +1,8 @@
 Operations with the `Category` and `Product` entities
 
-All operations must contain the appropriate `authorization` token:
-  
-```bash
---header 'authorization: Bearer xxxxx...'
-```
+## Category create [/services/catalog/v1/category.create]
 
-And the `accept` and `content-type` headers:
- 
-```bash
-  --header 'accept: application/json' \
-  --header 'content-type: application/json'
-```
-
-
-
-
-## Category [/services/catalog/v1/category]
-
-### Category Create [POST]
+### Category create [POST]
 
 Creates a Category record.
 
@@ -26,7 +10,7 @@ Creates a Category record.
 Example
 ```bash
 curl --request POST \
-  --url http://localhost:3000/services/catalog/v1/category \
+  --url http://localhost:3000/services/catalog/v1/category.create \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
@@ -44,22 +28,36 @@ curl --request POST \
 
     + Attributes (CategoryRequest)
 
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
-  + Attributes (Category)
+  + Attributes (CategoryResponseOk)
 
-## Category [/services/catalog/v1/category/{categoryId}]
++ Response 200 (application/json)
+
+  + Attributes (CategoryResponseNoParent)
+
++ Response 200 (application/json)
+
+  + Attributes (CategoryResponseDuplicateKey)
+
++ Response 200 (application/json)
+
+  + Attributes (CategoryResponseValidationError)
+
+## Category info [/services/catalog/v1/category/category.info{?id}]
 
 + Parameters
 
-    + categoryId: `SJlkcsaQ` (string, required) - The Category id
+    + id: `SJlkcsaQ` (string, required) - The Category id
 
-### Get [GET]
+### Category info [GET]
+
+Obtains information about a Category
 
 ::: note
 Example
 ```bash
-  --url http://localhost:3000/services/catalog/v1/category/SJlkcsaQ \
+  --url http://localhost:3000/services/catalog/v1/category.info?id=SJlkcsaQ \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'
@@ -77,7 +75,13 @@ Example
 
   + Attributes (Category)
 
-### Remove [DELETE]
+## Category remove [/services/catalog/v1/category/category.remove{?id}]
+
++ Parameters
+
+    + id: `SJlkcsaQ` (string, required) - The Category id
+
+### Category remove [POST]
 
 Removes a Category. Not possible if it contains products.
 
@@ -87,13 +91,12 @@ If the Category has childrens, they are re-parented to this Category parent.
 Example
 ```bash
 curl --request DELETE \
-  --url http://localhost:3000/services/catalog/v1/category/SJlkcsaQ \
+  --url http://localhost:3000/services/catalog/v1/category.remove?id=SJlkcsaQ \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'
 ```
 :::
-
 
 + Request default (application/json)
 
@@ -104,7 +107,13 @@ curl --request DELETE \
 
 + Response 204 (application/json)
 
-### Update [PUT]
+## Category update [/services/catalog/v1/category/category.update{?id}]
+
++ Parameters
+
+    + id: `SJlkcsaQ` (string, required) - The Category id
+
+### Category update [POST]
 
 Updates a Category.
 
@@ -112,7 +121,7 @@ Updates a Category.
 Example
 ```bash
 curl --request PUT \
-  --url http://localhost:3000/services/catalog/v1/category/SJlkcsaQ \
+  --url http://localhost:3000/services/catalog/v1/category.update?id=SJlkcsaQ \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'

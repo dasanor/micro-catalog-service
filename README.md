@@ -14,7 +14,7 @@ ecosystem.
 
 # Entities
 
-**Product**
+## Product
 
 Items you could add tothe Cart.
 
@@ -39,7 +39,7 @@ variants | In a Base Product, a list of child Variant Products ids | String List
 modifiers | In a Base Product, a list of product modifiers [{'color', 'size'}] | Object List | no | -
 taxCode | Tax code applicable to this product | String | no | 'default'  
   
-**Category**
+## Category
 
 The Categories allows the Product organization in an hierarchically way. 
 The `ROOT` default Category is the parent of all Categories.
@@ -62,7 +62,7 @@ Field | Description| Type | Required | Default
 id | Internal unique category identifier | String | yes | System generated
 title | Category title to show in the store | String | yes | - 
 description | Category description | String | no | - 
-slug | String to be used in the url | String | yes | - 
+slug | String to be used in the url | String | yes | Generated from the title
 parent | Parent Category | String | no | ROOT 
 path | Representation of the Category hierarchy with their ids. i.e: `ROOT.rJWB4cSr.B1-Zr45Br` | String | no | - 
 classifications | List of classifications the product must have to belog to this Category | String List | no | - 
@@ -74,34 +74,36 @@ classifications | List of classifications the product must have to belog to this
   The Variants System allows to create a parent product and one or more 
   child products, each of one have a different set of characteristics.
    
-  * Base product
+## Base product
   
   Not salable Product that serves as a parent for Variants Products. 
   They define the set of characteristic the Variants will differ
 
-**Base example**
+## Base example
+
 ```javascript
 {
   sku: '0001',
   title: 'Very nice shoe',
   modifiers: [
-  'color',
-  'size'
+    'color',
+    'size'
   ],
   variants: [
-  '10001',
-  '10002',
-  '10003'
+    '10001',
+    '10002',
+    '10003'
   ]
 }
 ```
   
-  * Variant
+## Variant
   
   Products that belong to a Base Product and differ in some 
   characteristic (like color or size)
   
-**Variant example**
+## Variant example
+
 ```javascript
 {
   sku: '1001',
@@ -143,7 +145,8 @@ in the category.
 The Classification System could be used to provide a "faceted" 
 navigation when the user search Products.
  
-**Category example**
+## Category example
+
 ```javascript
 { 
   id: 'C1', 
@@ -156,7 +159,8 @@ navigation when the user search Products.
 }
 ```
 
-**Product with Classifications example**
+## Product with Classifications example
+
 ```javascript
 {
   sku: '2001',
@@ -174,30 +178,3 @@ navigation when the user search Products.
 
 The system uses [elasticsearch](https://www.elastic.co/products/elasticsearch) 
 to index and search Products.
-
-# API
-
-The full API documentation can be accessed in the microbase web http://api.microbase.io 
-and provide access to the Products and Categories endpoints to create, 
-modify and delete them:
-
-## Categories
-
-Name | Description | Method | Endpoint
------|-------------|--------|---------
-catalog:createCategory | Creates a Category | `POST` | `/services/catalog/v1/category`
-catalog:getCategory | Retrieves a Category | `GET` | `/services/catalog/v1/category/{categoryId}`
-catalog:updateCategory | Updates a Category | `PUT` | `/services/catalog/v1/category/{categoryId}`
-catalog:removeCategory | Removes a Category | `DELETE` | `/services/catalog/v1/category/{categoryId}`
-catalog:listCategories | Search Categories and filter fields | `GET` | `/services/catalog/v1/category`
-catalog:getCategoryChildren | Get a Category child Categories recursively | `GET` | `/services/catalog/v1/category/{categoryId}/children`
-
-## Products
-
-Name | Description | Method | Endpoint
------|-------------|--------|---------
-catalog:createProduct | Creates a Product | `POST` | `/services/catalog/v1/product`
-catalog:getProduct | Retrieves a Product | `GET` | `/services/catalog/v1/product/{productId}`
-catalog:updateProduct | Updates a Product | `PUT` | `/services/catalog/v1/product/{productId}`
-catalog:removeProduct | Removes a Product | `DELETE` | `/services/catalog/v1/product/{productId}`
-catalog:listProducts | Search Products and filter fields | `GET` | `/services/catalog/v1/product`
