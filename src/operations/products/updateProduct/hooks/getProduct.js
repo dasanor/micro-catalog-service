@@ -1,12 +1,10 @@
-const boom = require('boom');
-
 function factory(base) {
   return (context, next) => {
     base.db.models.Product
       .findById(context.newData.id)
       .exec()
       .then(product => {
-        if (!product) throw boom.notAcceptable(`Base product '${context.newData.id}' not found`);
+        if (!product) throw base.utils.Error('product_not_found', context.newData.id);
         context.oldProduct = product;
         next();
       })

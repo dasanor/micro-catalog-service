@@ -1,5 +1,3 @@
-const boom = require('boom');
-
 function factory(base) {
   const updatableFields = base.db.models.Product.updatableFields;
   return (context, next) => {
@@ -15,7 +13,7 @@ function factory(base) {
       .findOneAndUpdate({ _id: context.newData.id }, { $set: update }, { new: true })
       .exec()
       .then(savedProduct => {
-        if (!savedProduct) throw boom.notFound('Product not saved');
+        if (!savedProduct) throw base.utils.Error('product_not_saved');
         context.savedProduct = savedProduct;
       })
       .then(() => {

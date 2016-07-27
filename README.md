@@ -16,30 +16,68 @@ ecosystem.
 
 ## Product
 
-Items you could add tothe Cart.
+Items you could add to the Cart.
 
-Field | Description| Type | Required | Default
-------|------------|------|----------|--------
-id | Internal unique product identifier | String | yes | System generated
-sku | Unique stock keeping unit identifier | String | yes  |  -
-status| Status of the Product [ONLINE/DRAFT]. Only ONLINE Products are indexed and salable | String | yes | 'DRAFT' 
-title | Product title to show in the store | String | yes | - 
-description | Product description | String | no | - 
-brand | The Product Brand | String | no |  -
-categories | A list of categories the Product belongs to | String List | yes | - 
-price | The Product base price | Number | yes |  -
-salePrice | The Product sale price | Number | no | The Product price
-isNetPrice | Defines the price as Net of Gross | Boolean | no | -
-stockStatus | [0/1/2] (0: NORMAL, 1:UNLIMITED, 2:DISCONTINUED) | Number | yes | 0
-medias | List of urls pointing to images [{id: '100x100', url: 'http://myserver.com/images/myimage100x100.jpg'}] | Object List | no | - 
-classifications | If the Product belogs to a Category with classifications, a list of classification values [{id: 'color', value: 'Grey'}] | Object List | no | -
-base | In a Variant Product, the Parent Product id | String | no | -
-variations | In a Variant Product, the value of the modifiers [{id: 'color', value: 'Blue'}, {id: 'size', value: '15'}] | Object List | no | - 
-variants | In a Base Product, a list of child Variant Products ids | String List | no | - 
-modifiers | In a Base Product, a list of product modifiers [{'color', 'size'}] | Object List | no | -
-taxCode | Tax code applicable to this product | String | no | 'default'  
-  
+```javascript
+{ 
+    "id" : "HJ4g4fACrH", 
+    "base" : "SJ64fAAHH", 
+    "sku" : "001017730838228085", 
+    "title" : "Gel Noosa Tri 11", 
+    "description" : "A long description for this shoes", 
+    "brand" : "Asics", 
+    "price" : 119.95, 
+    "salePrice" : 99.95, 
+    "isNetPrice" : false, 
+    "taxCode" : "default", 
+    "status" : "ONLINE", 
+    "stockStatus" : 0,
+    "classifications" : [
+        { "id" : "color", "value" : "Multicolor" }, 
+        { "id" : "genre", "value" : "hombre" }
+    ], 
+    "medias" : [
+        {"id": "100x100", "url": "http://placehold.it/100x100"},
+        {"id": "350x150", "url": "http://placehold.it/350x150"}    
+    ], 
+    "categories" : [
+        "B1-Zr45Br"
+    ] 
+}
+```
+
 ## Category
+
+```javascript
+{ 
+    "id" : "B1-Zr45Br", 
+    "path" : "ROOT.rJWB4cSr.Bkx-rNcHH.B1-Zr45Br", 
+    "parent" : "Bkx-rNcHH", 
+    "title" : "Sport Shoes", 
+    "description" : "Sport Shoes", 
+    "slug" : "sport-shoes", 
+    "classifications" : [
+        {
+            "id" : "color", 
+            "description" : "Color", 
+            "type" : "STRING", 
+            "mandatory" : true
+        }, 
+        {
+            "id" : "genre", 
+            "description" : "Female/Male/Kids", 
+            "type" : "STRING", 
+            "mandatory" : false
+        }, 
+        {
+            "id" : "footprint", 
+            "description" : "Motion mechanics", 
+            "type" : "STRING", 
+            "mandatory" : false
+        }
+    ]
+}
+```
 
 The Categories allows the Product organization in an hierarchically way. 
 The `ROOT` default Category is the parent of all Categories.
@@ -56,16 +94,6 @@ ROOT
        +--- Monitors
        +--- Networking
 ```
-
-Field | Description| Type | Required | Default
-------|------------|------|----------|--------
-id | Internal unique category identifier | String | yes | System generated
-title | Category title to show in the store | String | yes | - 
-description | Category description | String | no | - 
-slug | String to be used in the url | String | yes | Generated from the title
-parent | Parent Category | String | no | ROOT 
-path | Representation of the Category hierarchy with their ids. i.e: `ROOT.rJWB4cSr.B1-Zr45Br` | String | no | - 
-classifications | List of classifications the product must have to belog to this Category | String List | no | - 
 
 # Variants
   When you have the same product in several sizes and/or color you could 

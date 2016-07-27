@@ -72,7 +72,7 @@ function opFactory(base) {
         .then(categories => {
           return reply(base.utils.genericResponse({
             page: { limit, skip },
-            data: categories.map(p => p.toClient())
+            data: categories.map(c => c.toClient())
           }));
         })
         .catch(error => reply(base.utils.genericResponse(null, error)));

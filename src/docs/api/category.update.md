@@ -7,9 +7,22 @@ This method is used to update Category data
 This method has the URL https://server/services/catalog/v1/category.create and 
 follows the [MicroBase API calling conventions](../calling-conventions.html).
 
-Argument | Example | Required | Description
----------|---------|----------|------------
-token | Bearer xxxxx... | true | Authentication token
+Argument | Required | Type | Example | Description
+---------|----------|------|---------|------------
+token         | yes | Token  | Bearer xxxxx... | Authentication token.
+id            | no  | String | SJlkcsaQ        | The id of the Category to update.
+
+## Updatable fields
+
+See [category.create](./category.create.html) for a fields description.
+
+Name |
+-----|
+title
+description
+slug
+classification
+parent
 
 # Response
 

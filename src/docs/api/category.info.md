@@ -7,12 +7,12 @@ This method is used to obtain information about a Category
 This method has the URL https://server/services/catalog/v1/category.create and 
 follows the [MicroBase API calling conventions](../calling-conventions.html).
 
-Argument | Example | Required | Description
----------|---------|----------|------------
-token | Bearer xxxxx... | true | Authentication token
-id | SJlkcsaQ | true | The Category id to get info on
-withChildrens | true | false | Set to 'true' to obtain the children categories
-recursive | false | true | Set to 'true' to recursively get the children children's 
+Argument | Required | Type | Example | Description
+---------|----------|------|---------|------------
+token         | yes | Token   | Bearer xxxxx... | Authentication token.
+id            | yes | String  | SJlkcsaQ        | The Category id to get info on.
+withChildrens | no  | Boolean | true            | Set to 'true' to obtain the children categories. Defaults to 'false'.
+recursive     | no  | Boolean | true            | Set to 'true' to recursively get the children children's. Defaults to 'false'. 
 
 # Response
 

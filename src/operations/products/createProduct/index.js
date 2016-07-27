@@ -1,5 +1,5 @@
 /**
- * ## `createProduct` operation factory
+ * ## `product.create` operation factory
  *
  * Create Product operation
  *
@@ -8,15 +8,8 @@
  */
 function opFactory(base) {
   const createProductChain = new base.utils.Chain().use('createProductChain');
-  /**
-   * ## catalog.createProduct service
-   *
-   * Creates a new Product
-   */
   const op = {
-    name: 'createProduct',
-    path: '/product',
-    method: 'POST',
+    name: 'product.create',
     // TODO: create the product JsonSchema
     handler: (newData, reply) => {
       const context = {
@@ -24,8 +17,8 @@ function opFactory(base) {
       };
       createProductChain
         .exec(context)
-        .then(() => reply(context.savedProduct.toClient()).code(201))
-        .catch(error => reply(base.utils.genericErrorResponse(error)));
+        .then(() => reply(base.utils.genericResponse({ product: context.savedProduct.toClient() })))
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;

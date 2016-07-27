@@ -1,7 +1,5 @@
-const boom = require('boom');
-
 /**
- * ## `removeProduct` operation factory
+ * ## `product.remove` operation factory
  *
  * Remove Product operation
  *
@@ -10,15 +8,8 @@ const boom = require('boom');
  */
 function opFactory(base) {
   const productsChannel = base.config.get('bus:channels:products:name');
-  /**
-   * ## catalog.removeProduct service
-   *
-   * Removes a Product
-   */
   const op = {
-    name: 'removeProduct',
-    path: '/product/{id}',
-    method: 'DELETE',
+    name: 'product.remove',
     handler: ({ id }, reply) => {
       // TODO: Don't allow removes if it has variants.
       // TODO: Don't allow removes if it has reserves.
@@ -26,7 +17,7 @@ function opFactory(base) {
         .findOneAndRemove({ _id: id })
         .exec()
         .then(removedProduct => {
-          if (!removedProduct) throw (boom.notFound('Product not found'));
+          if (!removedProduct) throw base.utils.Error('product_not_found', id);
           if (base.logger.isDebugEnabled()) base.logger.debug(`[product] product ${removedProduct.id} removed`);
           base.bus.publish(`${productsChannel}.REMOVE`,
             {
@@ -48,11 +39,8 @@ function opFactory(base) {
           }
           return removedProduct;
         })
-        .then(() => reply().code(204))
-        .catch(error => {
-          if (!(error.isBoom || error.statusCode === 404)) base.logger.error(error);
-          reply(boom.wrap(error));
-        });
+        .then(() => reply(base.utils.genericResponse()))
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;

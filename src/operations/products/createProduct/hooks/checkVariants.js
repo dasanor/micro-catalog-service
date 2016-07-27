@@ -1,17 +1,14 @@
-const boom = require('boom');
-
 function factory(base) {
   return (context, next) => {
-
     // Cannot mix base & variant data
     if ((context.newData.variants || context.newData.modifiers)
       && (context.newData.base || context.newData.variations)) {
-      return next(boom.notAcceptable('Inconsistent base/variants data'));
+      return next(base.utils.Error('inconsistent_base_variants_data'));
     }
-
+    // A Variant must have both base and variations
     if ((context.newData.base && !context.newData.variations)
       || context.newData.variations && !context.newData.base) {
-      return next(boom.notAcceptable('Inconsistent base/variations data'));
+      return next(base.utils.Error('inconsistent_base_variantions_data'));
     }
 
     if (context.newData.base) {
@@ -28,13 +25,13 @@ function factory(base) {
         .findById(context.newData.base)
         .exec()
         .then(baseProduct => {
-          if (!baseProduct) throw boom.notAcceptable(`Base product '${context.newData.base}' not found`);
+          if (!baseProduct) throw base.utils.Error('base_product_not_found', context.newData.base);
           // Check variations against the base Product modifications, while filtering them
           const filteredVariations = [];
           baseProduct.modifiers.forEach(modifier => {
             const variation = context.newData.variations.find(v => v.id === modifier);
             if (!variation || !variation.value) {
-              throw boom.notAcceptable(`Variation '${modifier}' not found`);
+              throw base.utils.Error('variation_data_not_found', modifier);
             }
             filteredVariations.push(variation);
           });
@@ -51,7 +48,7 @@ function factory(base) {
 
       // There should be some modifier
       if (context.newData.modifiers.length === 0) {
-        return next(boom.notAcceptable('No modifiers found'));
+        return next(base.utils.Error('no_modifiers_found'));
       }
 
       // If it's a create (we have an id), don't check variants (There isn't any yet)
@@ -64,12 +61,12 @@ function factory(base) {
           base.db.models.Product
             .findById(variantId)
             .then(variant => {
-              if (!variant) reject(`Variant '${variantId}' not found`);
+              if (!variant) reject(base.utils.Error('variant_not_found', variantId));
               // Check variations against the base Product modifications
               context.newData.modifiers.forEach(modifier => {
                 const variation = variant.variations.find(v => v.id === modifier);
                 if (!variation || !variation.value) {
-                  reject(boom.notAcceptable(`Variation '${modifier}' not found in variant ${variantId}`));
+                  reject(base.utils.Error('variation_data_not_found', modifier));
                 }
               });
               resolve();

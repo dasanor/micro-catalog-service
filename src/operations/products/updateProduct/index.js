@@ -1,5 +1,5 @@
 /**
- * ## `updateProduct` operation factory
+ * ## `product.update` operation factory
  *
  * Update Product operation
  *
@@ -8,15 +8,8 @@
  */
 function opFactory(base) {
   const updateProductChain = new base.utils.Chain().use('updateProductChain');
-  /**
-   * ## catalog.updateProduct service
-   *
-   * Updates a Product
-   */
   const op = {
-    name: 'updateProduct',
-    path: '/product/{id}',
-    method: 'PUT',
+    name: 'product.update',
     // TODO: create the product JsonSchema
     handler: (newData, reply) => {
       const context = {
@@ -24,8 +17,8 @@ function opFactory(base) {
       };
       updateProductChain
         .exec(context)
-        .then(() => reply(context.savedProduct.toClient()))
-        .catch(error => reply(base.utils.genericErrorResponse(error)));
+        .then(() => reply(base.utils.genericResponse({ product: context.savedProduct.toClient() })))
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;

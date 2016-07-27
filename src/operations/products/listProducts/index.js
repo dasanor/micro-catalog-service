@@ -1,7 +1,5 @@
-const boom = require('boom');
-
 /**
- * ## `listProduct` operation factory
+ * ## `product.list` operation factory
  *
  * List Products operation
  *
@@ -35,15 +33,8 @@ function opFactory(base) {
   const defaultLimit = 10;
   const maxLimit = 100;
 
-  /**
-   * ## catalog.listProduct service
-   *
-   * List Products filtering by fields
-   */
   const op = {
-    name: 'listProducts',
-    path: '/product',
-    method: 'GET',
+    name: 'product.list',
     handler: (params, reply) => {
 
       // Filters
@@ -83,11 +74,13 @@ function opFactory(base) {
       // Exec the query
       query.exec()
         .then(products => {
-          return reply({ page: { limit, skip }, data: products.map(p => p.toClient()) });
+          return reply(base.utils.genericResponse({
+            page: { limit, skip },
+            data: products.map(p => p.toClient())
+          }));
+
         })
-        .catch(error => {
-          reply(boom.wrap(error));
-        });
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;

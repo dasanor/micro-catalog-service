@@ -1,6 +1,4 @@
-const boom = require('boom');
-
-function factory(/* base */) {
+function factory(base) {
   return (context, next) => {
     if (context.categories) {
       const promises = context.categories.map(category => {
@@ -20,14 +18,13 @@ function factory(/* base */) {
           const filteredClassifications = [];
           classifications.forEach(c => {
             const cData = context.newData.classifications.find(x => x.id === c.id);
-            if (!cData && c.mandatory) throw new boom.notAcceptable(`Missing classification '${c.id}'`);
+            if (!cData && c.mandatory) throw base.utils.Error('missing_classification', c.id);
             if (cData) {
-              if (!cData.value && c.mandatory) throw new boom.notAcceptable(`Empty classification '${c.id}' value`);
-              // TODO: Check datatypes
+              if (!cData.value && c.mandatory) throw base.utils.Error('empty_classification_value', c.id);
               if (c.type === 'STRING') cData.value = `${cData.value}`;
-              if (c.type === 'BOOLEAN' && typeof cData.value !== 'boolean') throw new boom.notAcceptable(`Classification '${c.id}' not boolean`);
+              if (c.type === 'BOOLEAN' && typeof cData.value !== 'boolean') throw base.utils.Error('classification_value_not_a_boolean', c.id);
               if (c.type === 'NUMBER') cData.value = +cData.value;
-              if (c.type === 'NUMBER' && !Number.isFinite(cData.value)) throw new boom.notAcceptable(`Classification '${c.id}' not numeric`);
+              if (c.type === 'NUMBER' && !Number.isFinite(cData.value)) throw base.utils.Error('classification_value_not_a_number', c.id);
               filteredClassifications.push(cData);
             }
           });

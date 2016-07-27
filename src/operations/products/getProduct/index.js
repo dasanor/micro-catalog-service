@@ -1,7 +1,5 @@
-const boom = require('boom');
-
 /**
- * ## `getProduct` operation factory
+ * ## `product.info` operation factory
  *
  * Get Product operation
  *
@@ -23,15 +21,8 @@ function opFactory(base) {
     if (data.new.base && data.new.base !== data.old.base) cache.drop(data.new.base);
   });
 
-  /**
-   * ## catalog.getProduct service
-   *
-   * Gets a Product
-   */
   const op = {
-    name: 'getProduct',
-    path: '/product/{id}',
-    method: 'GET',
+    name: 'product.info',
     cache: {
       options: {
         expiresIn: base.config.get('cache:products')
@@ -58,13 +49,10 @@ function opFactory(base) {
         .populate('variants')
         .exec()
         .then(product => {
-          if (!product) throw boom.notFound(`Product '${params.id}' not found`);
-          return reply(product.toClient());
+          if (!product) throw base.utils.Error('product_not_found', params.id);
+          return reply(base.utils.genericResponse({ product: product.toClient() }));
         })
-        .catch(error => {
-          if (!(error.isBoom || error.statusCode === 404)) base.logger.error(error);
-          reply(boom.wrap(error));
-        });
+        .catch(error => reply(base.utils.genericResponse(null, error)));
     }
   };
   return op;
