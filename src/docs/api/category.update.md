@@ -26,7 +26,8 @@ parent
 
 # Response
 
-Category object
+Return a Category object:
+
 ```javascript
 {
     "ok": true,

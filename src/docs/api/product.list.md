@@ -25,7 +25,8 @@ fields        | no  | String List | title,price        | Comma separated field l
 
 # Response
 
-Returns a page
+Returns a page:
+
 ```javascript
 {
   "ok": true,

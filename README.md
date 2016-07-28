@@ -48,6 +48,8 @@ Items you could add to the Cart.
 
 ## Category
 
+The Categories allows the Product organization in an hierarchically way. 
+
 ```javascript
 { 
     "id" : "B1-Zr45Br", 
@@ -79,7 +81,6 @@ Items you could add to the Cart.
 }
 ```
 
-The Categories allows the Product organization in an hierarchically way. 
 The `ROOT` default Category is the parent of all Categories.
    
 ```
@@ -96,6 +97,7 @@ ROOT
 ```
 
 # Variants
+
   When you have the same product in several sizes and/or color you could 
   use the Variants System.
   

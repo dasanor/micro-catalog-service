@@ -20,7 +20,8 @@ fields        | no  | String List | title,path         | Comma separated field l
 
 # Response
 
-Returns a page
+Returns a page:
+
 ```javascript
 {
   "ok": true,

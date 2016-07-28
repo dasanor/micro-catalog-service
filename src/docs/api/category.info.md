@@ -17,6 +17,7 @@ recursive     | no  | Boolean | true            | Set to 'true' to recursively g
 # Response
 
 Returns a Category object:
+
 ```javascript
 {
     "ok": true,

@@ -30,6 +30,7 @@ taxCode         | no  | String      | vat-7 | Tax code applicable to this produc
 # Response
 
 Returns a Product object:
+
 ```javascript
 {
     "ok": true,

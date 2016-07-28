@@ -14,7 +14,8 @@ id            | no  | String | HJ4g4fACrH      | The id of the Product to remove
 
 # Response
 
-Returns a default response
+Returns a default response:
+
 ```javascript
 {
     "ok": true

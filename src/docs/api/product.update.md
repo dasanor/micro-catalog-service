@@ -38,7 +38,7 @@ variations |
 
 # Response
 
-Product object
+Returns a Product object:
 
 ```javascript
     "ok": true,

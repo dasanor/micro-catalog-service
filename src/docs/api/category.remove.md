@@ -14,7 +14,8 @@ id            | no  | String | SJlkcsaQ        | The id of the Category to remov
 
 # Response
 
-Returns a default response
+Returns a default response:
+
 ```javascript
 {
     "ok": true

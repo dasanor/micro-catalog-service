@@ -16,6 +16,7 @@ fields | no  | String | sku,title,brand | Comma separated field list to return.
 # Response
 
 Returns a Product object:
+
 ```javascript
 {
     "ok": true,

@@ -28,6 +28,7 @@ mandatory   | yes | Boolean | true   | The Product must have a value for this Cl
 # Response
 
 Returns a Category object:
+
 ```javascript
 {
     "ok": true,
