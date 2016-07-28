@@ -77,7 +77,7 @@ function createCategories(numEntries, categoryRequest) {
     };
   const promises = Array.from(new Array(numEntries), (a, i) => {
     return callService({
-      url: '/services/catalog/v1/category',
+      url: '/services/catalog/v1/category.create',
       payload: {
         title: `${categoryRequest.title} ${i}`,
         description: `${categoryRequest.description} ${i}`,
@@ -109,25 +109,30 @@ describe('Category', () => {
       parent: 'ROOT'
     };
     const options = {
-      url: '/services/catalog/v1/category',
+      url: '/services/catalog/v1/category.create',
       payload: payload
     };
     callService(options)
       .then(response => {
-        expect(response.statusCode).to.equal(201);
+        expect(response.statusCode).to.equal(200);
         // Expected result:
         //
         // {
-        //   path: 'ROOT.BkhfCwRw',
-        //   parent: 'ROOT',
-        //   title: 'Category 01',
-        //   description: 'This is the Category 01',
-        //   slug: 'category01',
-        //   classifications: [],
-        //   level: 2,
-        //   id: 'BkhfCwRw'
+        //   ok: true,
+        //   category: {
+        //     path: 'ROOT.BkhfCwRw',
+        //     parent: 'ROOT',
+        //     title: 'Category 01',
+        //     description: 'This is the Category 01',
+        //     slug: 'category01',
+        //     classifications: [],
+        //     level: 2,
+        //     id: 'BkhfCwRw'
+        //   }
         // }
-        const category = response.result;
+        expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
+        expect(response.result.category).to.be.an.instanceof(Object);
+        const category = response.result.category;
         expect(category.id).to.be.a.string();
         expect(category.parent).to.be.a.string().and.to.equal('ROOT');
         expect(category.level).to.be.a.number().and.to.equal(2);
@@ -152,12 +157,12 @@ describe('Category', () => {
       ]
     };
     const options = {
-      url: '/services/catalog/v1/category',
+      url: '/services/catalog/v1/category.create',
       payload: payload
     };
     callService(options)
       .then(response => {
-        expect(response.statusCode).to.equal(201);
+        expect(response.statusCode).to.equal(200);
         // Expected result:
         //
         // {
@@ -174,7 +179,9 @@ describe('Category', () => {
         //     { id: 'tech', description: 'Technology', type: 'STRING', mandatory: true }
         //   ]
         // }
-        const category = response.result;
+        expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
+        expect(response.result.category).to.be.an.instanceof(Object);
+        const category = response.result.category;
         expect(category.id).to.be.a.string();
         expect(category.parent).to.be.a.string().and.to.equal('ROOT');
         expect(category.level).to.be.a.number().and.to.equal(2);
@@ -192,17 +199,19 @@ describe('Category', () => {
       parent: 'ROOT'
     };
     const options = {
-      url: '/services/catalog/v1/category',
+      url: '/services/catalog/v1/category.create',
       payload: payload
     };
     callService(options)
       .then(createdResponse => {
-        expect(createdResponse.statusCode).to.equal(201);
-        const createdCategory = createdResponse.result;
-        callService({ method: 'GET', url: `/services/catalog/v1/category/${createdCategory.id}` })
+        expect(createdResponse.result.ok).to.be.a.boolean().and.to.equal(true);
+        const createdCategory = createdResponse.result.category;
+        callService({ url: `/services/catalog/v1/category.info?id=${createdCategory.id}` })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            const category = response.result;
+            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
+            expect(response.result.category).to.be.an.instanceof(Object);
+            const category = response.result.category;
             expect(category.id).to.be.a.string().and.equal(createdCategory.id);
             expect(category.title).to.be.a.string().and.to.equal(payload.title);
             expect(category.description).to.be.a.string().and.to.equal(payload.description);
@@ -224,11 +233,11 @@ describe('Category', () => {
       .then(cats => {
         expect(cats).to.be.a.array().and.to.have.length(q);
         callService({
-          method: 'GET',
-          url: `/services/catalog/v1/category?title=${categoryTemplate.title} 1`
+          url: `/services/catalog/v1/category.list?title=${categoryTemplate.title} 1`
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
+            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
             const categories = response.result.data;
             expect(categories).to.be.a.array().and.to.have.length(1);
             const category = categories[0];
@@ -244,11 +253,11 @@ describe('Category', () => {
       .then(cats => {
         expect(cats).to.be.a.array().and.to.have.length(q);
         callService({
-          method: 'DELETE',
-          url: `/services/catalog/v1/category/${cats[0].id}`
+          url: `/services/catalog/v1/category.remove?id=${cats[0].category.id}`
         })
           .then(response => {
-            expect(response.statusCode).to.equal(204);
+            expect(response.statusCode).to.equal(200);
+            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
             done();
           });
       });
@@ -261,20 +270,20 @@ describe('Category', () => {
         expect(cats).to.be.a.array().and.to.have.length(q);
         const payload = {
           title: 'Category title modified',
-          parent: cats[0].id
+          parent: cats[0].category.id
         };
         callService({
-          method: 'PUT',
-          url: `/services/catalog/v1/category/${cats[1].id}`,
+          url: `/services/catalog/v1/category.update?id=${cats[1].category.id}`,
           payload
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            const category = response.result;
+            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
+            const category = response.result.category;
             expect(category.title).to.be.a.string().and.to.equal(payload.title);
             expect(category.parent).to.be.a.string().and.to.equal(payload.parent);
             expect(category.level).to.be.a.number().and.to.equal(3);
-            expect(category.path).to.be.a.string().and.to.equal(`ROOT.${cats[0].id}.${cats[1].id}`);
+            expect(category.path).to.be.a.string().and.to.equal(`ROOT.${cats[0].category.id}.${cats[1].category.id}`);
             done();
           });
       });
@@ -286,33 +295,32 @@ describe('Category', () => {
       .then(cats => {
         expect(cats).to.be.a.array().and.to.have.length(q);
         const payload = {
-          parent: cats[0].id
+          parent: cats[0].category.id
         };
         callService({
-          method: 'PUT',
-          url: `/services/catalog/v1/category/${cats[1].id}`,
+          url: `/services/catalog/v1/category.update?id=${cats[1].category.id}`,
           payload
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            const category = response.result;
+            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
+            const category = response.result.category;
             expect(category.parent).to.be.a.string().and.to.equal(payload.parent);
-          })
-          .then(() => {
             return callService({
               method: 'GET',
-              url: '/services/catalog/v1/category/ROOT/children?recursive=true'
+              url: '/services/catalog/v1/category.info?id=ROOT&withChildrens=true&recursive=true'
             });
           })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            const level1 = response.result;
+            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
+            const level1 = response.result.category.children;
             expect(level1).to.be.a.array().and.to.have.length(q - 1);
-            const pos = level1.findIndex((cat) => cat.id === cats[0].id);
+            const pos = level1.findIndex((cat) => cat.id === cats[0].category.id);
             const level2 = level1[pos].children;
             expect(level2).to.be.a.array().and.to.have.length(1);
             const category = level2[0];
-            expect(category.id).to.be.a.string().and.to.equal(cats[1].id);
+            expect(category.id).to.be.a.string().and.to.equal(cats[1].category.id);
             done();
           });
       });
