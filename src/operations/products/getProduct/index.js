@@ -49,7 +49,7 @@ function opFactory(base) {
         .populate('variants')
         .exec()
         .then(product => {
-          if (!product) throw base.utils.Error('product_not_found', params.id);
+          if (!product) throw base.utils.Error('product_not_found', { productId: params.id });
           return reply(base.utils.genericResponse({ product: product.toClient() }));
         })
         .catch(error => reply(base.utils.genericResponse(null, error)));

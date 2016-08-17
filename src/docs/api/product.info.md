@@ -54,7 +54,7 @@ Expected errors that this method could return. Some errors return additional dat
 
 Error | Data | Description
 ------|------|------------
-product_not_found | The id not found | The Product was not found
+product_not_found | productId | The Product was not found
 
 # Example
 
