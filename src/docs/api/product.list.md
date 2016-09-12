@@ -60,7 +60,7 @@ Error | Data | Description
 # Example
 ```bash
 curl --request GET \
-  --url 'http://localhost:3000/services/catalog/v1/category.list?title=frigo&fields=sku,title,path' \
+  --url 'http://localhost:3000/services/catalog/v1/product.list?title=frigo&fields=sku,title,path' \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json'
