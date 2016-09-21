@@ -25,7 +25,7 @@
   },
   "maxCategoriesPerProduct": 5,
   "search": {
-    "host": "localhost:9200"
+    "host": "elasticsearch:9200"
   },
   "workers": [
     {
@@ -43,7 +43,7 @@
       },
       "amqp": {
         "handler": "./amqp",
-        "url": "amqp://localhost"
+        "url": "amqp://bus"
       }
     },
     "channels": {
