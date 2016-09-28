@@ -9,18 +9,18 @@
 function opFactory(base) {
   const op = {
     name: 'category.info',
-    handler: ({ id, withChildrens, recursive }, reply) => {
-      const retrieveChildrens = (withChildrens === 'true');
-      const retrieveChildrensRecursive = (recursive === 'true');
+    handler: ({ id, withChildren, recursive }, reply) => {
+      const retrieveChildren = (withChildren === 'true');
+      const retrieveChildrenRecursive = (recursive === 'true');
       base.db.models.Category
         .findOne({ _id: id })
         .exec()
         .then(category => {
           if (!category) throw base.utils.Error('category_not_found', id);
-          if (retrieveChildrens) {
+          if (retrieveChildren) {
             category.getChildrenTree({
               fields: '_id title slug',
-              recursive: retrieveChildrensRecursive,
+              recursive: retrieveChildrenRecursive,
               allowEmptyChildren: true
             }, (error, childrenTree) => {
               if (error) throw error;

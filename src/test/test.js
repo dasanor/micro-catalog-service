@@ -289,7 +289,7 @@ describe('Category', () => {
       });
   });
 
-  it('gets a Category childrens', done => {
+  it('gets a Category children', done => {
     const q = 4;
     createCategories(q)
       .then(cats => {
@@ -308,7 +308,7 @@ describe('Category', () => {
             expect(category.parent).to.be.a.string().and.to.equal(payload.parent);
             return callService({
               method: 'GET',
-              url: '/services/catalog/v1/category.info?id=ROOT&withChildrens=true&recursive=true'
+              url: '/services/catalog/v1/category.info?id=ROOT&withChildren=true&recursive=true'
             });
           })
           .then(response => {

@@ -9,10 +9,10 @@ follows the [MicroBase API calling conventions](../calling-conventions.html).
 
 Argument | Required | Type | Example | Description
 ---------|----------|------|---------|------------
-token         | yes | Token   | Bearer xxxxx... | Authentication token.
-id            | yes | String  | SJlkcsaQ        | The Category id to get info on.
-withChildrens | no  | Boolean | true            | Set to 'true' to obtain the children categories. Defaults to 'false'.
-recursive     | no  | Boolean | true            | Set to 'true' to recursively get the children children's. Defaults to 'false'. 
+token        | yes | Token   | Bearer xxxxx... | Authentication token.
+id           | yes | String  | SJlkcsaQ        | The Category id to get info on.
+withChildren | no  | Boolean | true            | Set to 'true' to obtain the children categories. Defaults to 'false'.
+recursive    | no  | Boolean | true            | Set to 'true' to recursively get the children children's. Defaults to 'false'.
 
 # Response
 
