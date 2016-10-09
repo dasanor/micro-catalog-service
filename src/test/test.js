@@ -142,7 +142,8 @@ describe('Category', () => {
         expect(category.slug).to.be.a.string().and.to.equal(payload.slug);
         expect(category.classifications).to.be.a.array().and.to.be.empty();
         done();
-      });
+      })
+      .catch(error => done(error));
   });
 
   it('creates a Category with classifications', done => {
@@ -188,7 +189,8 @@ describe('Category', () => {
         expect(category.path).to.be.a.string().and.to.startWith('ROOT.');
         expect(category.classifications).to.be.a.array().and.to.have.length(2);
         done();
-      });
+      })
+      .catch(error => done(error));
   });
 
   it('gets a Category by id', done => {
@@ -218,7 +220,8 @@ describe('Category', () => {
             expect(category.slug).to.be.a.string().and.to.equal(payload.slug);
             done();
           });
-      });
+      })
+      .catch(error => done(error));
   });
 
   it('gets a Category by title', done => {
@@ -244,7 +247,8 @@ describe('Category', () => {
             expect(category.title).to.be.a.string().and.to.equal(`${categoryTemplate.title} 1`);
             done();
           });
-      });
+      })
+      .catch(error => done(error));
   });
 
   it('removes a Category', done => {
@@ -260,7 +264,8 @@ describe('Category', () => {
             expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
             done();
           });
-      });
+      })
+      .catch(error => done(error));
   });
 
   it('updates a Category', done => {
@@ -286,7 +291,8 @@ describe('Category', () => {
             expect(category.path).to.be.a.string().and.to.equal(`ROOT.${cats[0].category.id}.${cats[1].category.id}`);
             done();
           });
-      });
+      })
+      .catch(error => done(error));
   });
 
   it('gets a Category children', done => {
@@ -323,6 +329,7 @@ describe('Category', () => {
             expect(category.id).to.be.a.string().and.to.equal(cats[1].category.id);
             done();
           });
-      });
+      })
+      .catch(error => done(error));
   });
 });
