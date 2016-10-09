@@ -34,7 +34,6 @@ function opFactory(base) {
     });
 
   const op = {
-    name: 'category.create',
     // TODO: create the category JsonSchema
     handler: (msg, reply) => {
       const category = new base.db.models.Category({

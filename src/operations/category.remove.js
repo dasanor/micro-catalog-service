@@ -8,7 +8,6 @@
  */
 function opFactory(base) {
   const op = {
-    name: 'category.remove',
     handler: ({ id }, reply) => {
       // findOneAndRemove not used to allow the tree plugin to do their job
       base.db.models.Category

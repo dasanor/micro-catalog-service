@@ -22,7 +22,6 @@ function opFactory(base) {
   });
 
   const op = {
-    name: 'product.info',
     cache: {
       options: {
         expiresIn: base.config.get('cache:products')

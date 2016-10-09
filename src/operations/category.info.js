@@ -8,7 +8,6 @@
  */
 function opFactory(base) {
   const op = {
-    name: 'category.info',
     handler: ({ id, withChildren, recursive }, reply) => {
       const retrieveChildren = (withChildren === 'true');
       const retrieveChildrenRecursive = (recursive === 'true');

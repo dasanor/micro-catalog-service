@@ -9,19 +9,19 @@
     "categoryModel": "./models/categoryModel"
   },
   "createProductChain": {
-    "checkCategories": "./operations/products/createProduct/hooks/checkCategories",
-    "checkClassifications": "./operations/products/createProduct/hooks/checkClassifications",
-    "checkVariants": "./operations/products/createProduct/hooks/checkVariants",
-    "saveProduct": "./operations/products/createProduct/hooks/saveProduct",
-    "postSaveProduct": "./operations/products/createProduct/hooks/postSaveProduct"
+    "checkCategories": "./operations/chains/createProduct/checkCategories",
+    "checkClassifications": "./operations/chains/createProduct/checkClassifications",
+    "checkVariants": "./operations/chains/createProduct/checkVariants",
+    "saveProduct": "./operations/chains/createProduct/saveProduct",
+    "postSaveProduct": "./operations/chains/createProduct/postSaveProduct"
   },
   "updateProductChain": {
-    "getProduct": "./operations/products/updateProduct/hooks/getProduct",
-    "checkCategories": "./operations/products/createProduct/hooks/checkCategories",
-    "checkClassifications": "./operations/products/createProduct/hooks/checkClassifications",
-    "checkVariants": "./operations/products/createProduct/hooks/checkVariants",
-    "saveProduct": "./operations/products/updateProduct/hooks/saveProduct",
-    "postSaveProduct": "./operations/products/updateProduct/hooks/postSaveProduct"
+    "getProduct": "./operations/chains/updateProduct/getProduct",
+    "checkCategories": "./operations/chains/createProduct/checkCategories",
+    "checkClassifications": "./operations/chains/createProduct/checkClassifications",
+    "checkVariants": "./operations/chains/createProduct/checkVariants",
+    "saveProduct": "./operations/chains/updateProduct/saveProduct",
+    "postSaveProduct": "./operations/chains/updateProduct/postSaveProduct"
   },
   "maxCategoriesPerProduct": 5,
   "search": {

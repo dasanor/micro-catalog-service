@@ -8,7 +8,6 @@
  */
 function opFactory(base) {
   const op = {
-    name: 'category.update',
     // TODO: create the category JsonSchema
     handler: (msg, reply) => {
       // findOneAndUpdate not used to allow the tree plugin to do their job

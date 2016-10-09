@@ -9,7 +9,6 @@
 function opFactory(base) {
   const productsChannel = base.config.get('bus:channels:products:name');
   const op = {
-    name: 'product.remove',
     handler: ({ id }, reply) => {
       // TODO: Don't allow removes if it has variants.
       // TODO: Don't allow removes if it has reserves.

@@ -1,21 +1,20 @@
 /**
- * ## `product.create` operation factory
+ * ## `product.update` operation factory
  *
- * Create Product operation
+ * Update Product operation
  *
  * @param {base} Object The microbase object
  * @return {Function} The operation factory
  */
 function opFactory(base) {
-  const createProductChain = new base.utils.Chain().use('createProductChain');
+  const updateProductChain = new base.utils.Chain().use('updateProductChain');
   const op = {
-    name: 'product.create',
     // TODO: create the product JsonSchema
     handler: (newData, reply) => {
       const context = {
         newData,
       };
-      createProductChain
+      updateProductChain
         .exec(context)
         .then(() => reply(base.utils.genericResponse({ product: context.savedProduct.toClient() })))
         .catch(error => reply(base.utils.genericResponse(null, error)));
