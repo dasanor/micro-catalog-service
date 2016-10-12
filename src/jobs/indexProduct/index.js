@@ -25,6 +25,7 @@ function jobFactory(base) {
         body: {
           sku: data.new.sku,
           status: data.new.status,
+          type: data.new.type,
           title: data.new.title,
           description: data.new.description,
           brand: data.new.brand,
