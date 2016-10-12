@@ -2,8 +2,10 @@
   "logger": {
     "level": "debug"
   },
-  "services": {
-    "port": "3002"
+  "transports": {
+    "http": {
+      "port": "3002"
+    }
   },
   "db": {
     "host": "localhost",
