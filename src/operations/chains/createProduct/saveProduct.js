@@ -22,8 +22,12 @@ function factory(base) {
     if (context.newData.base) {
       product.base = context.newData.base;
       product.variations = context.newData.variations;
-    } else if (context.newData.modifiers) {
+      product.type = base.db.models.Product.TYPE.VARIANT;
+    } else if (context.newData.modifiers.length > 0) {
       product.modifiers = context.newData.modifiers;
+      product.type = base.db.models.Product.TYPE.BASE;
+    } else {
+      product.type = base.db.models.Product.TYPE.SIMPLE;
     }
     // Save
     product

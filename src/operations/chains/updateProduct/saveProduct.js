@@ -8,6 +8,14 @@ function factory(base) {
         result[f] = context.newData[f];
         return result;
       }, {});
+    // Update type
+    if (update.base || context.oldProduct.base) {
+      update.type = base.db.models.Product.TYPE.VARIANT;
+    } else if (update.modifiers.length > 0 || context.oldProduct.length > 0) {
+      update.type = base.db.models.Product.TYPE.BASE;
+    } else {
+      update.type = base.db.models.Product.TYPE.SIMPLE;
+    }
     // Update
     return base.db.models.Product
       .findOneAndUpdate({ _id: context.newData.id }, { $set: update }, { new: true })

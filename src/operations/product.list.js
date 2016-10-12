@@ -20,6 +20,7 @@ function opFactory(base) {
     title: likeExpression,
     description: likeExpression,
     status: inExpression,
+    type: inExpression,
     brand: likeExpression,
     taxCode: inExpression,
     stockStatus: inExpression,

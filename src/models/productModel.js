@@ -14,6 +14,12 @@ function modelFactory(base) {
     ONLINE: 'ONLINE'
   };
 
+  const TYPE = {
+    SIMPLE: 0,
+    BASE: 1,
+    VARIANT: 2
+  };
+
   // Variations Values Schema
   const variationsValuesSchema = base.db.Schema({
     id: { type: String, required: true },
@@ -45,6 +51,12 @@ function modelFactory(base) {
       required: false,
       default: 'DRAFT',
       enum: Object.keys(STATUS).map(s => STATUS[s])
+    },
+    type: {
+      type: Number,
+      required: true,
+      default: 0,
+      enum: Object.keys(TYPE).map(s => TYPE[s])
     },
     title: { type: String, required: true },
     description: { type: String, required: false },
@@ -101,6 +113,7 @@ function modelFactory(base) {
   const model = base.db.model('Product', schema);
   model.STOCKSTATUS = STOCKSTATUS;
   model.STATUS = STATUS;
+  model.TYPE = TYPE;
 
   model.selectableFields = [
     'id',
@@ -108,6 +121,7 @@ function modelFactory(base) {
     'title',
     'description',
     'status',
+    'type',
     'brand',
     'taxCode',
     'stockStatus',
@@ -128,6 +142,7 @@ function modelFactory(base) {
     'title',
     'description',
     'status',
+    'type',
     'brand',
     'taxCode',
     'stockStatus',
