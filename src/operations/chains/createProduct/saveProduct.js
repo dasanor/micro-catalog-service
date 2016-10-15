@@ -1,5 +1,3 @@
-const boom = require('boom');
-
 function factory(base) {
   const normalStockStatus = base.db.models.Product.STOCKSTATUS.NORMAL;
   return (context, next) => {
