@@ -3,6 +3,7 @@ const shortId = require('shortid');
 const Code = require('code');
 const Lab = require('lab');
 const nock = require('nock');
+const request = require('supertest-as-promised');
 
 // shortcuts
 const lab = exports.lab = Lab.script();
@@ -13,7 +14,7 @@ const it = lab.it;
 const expect = Code.expect;
 
 const base = require('../index.js');
-const server = base.services.server;
+const app = base.transports.http.app;
 
 const defaultHeaders = base.config.get('test:defaultHeaders');
 
@@ -64,7 +65,12 @@ function initDB(done) {
 function callService(options) {
   options.method = options.method || 'POST';
   options.headers = options.headers || defaultHeaders;
-  return server.inject(options);
+  const promise = request(app)[options.method.toLowerCase()](options.url);
+  Object.keys(options.headers).forEach(key => {
+    promise.set(key, options.headers[key]);
+  });
+  if (options.payload) promise.send(options.payload);
+  return promise;
 }
 
 // Helper to create categories
@@ -85,7 +91,7 @@ function createCategories(numEntries, categoryRequest) {
         parent: categoryRequest.parent
       }
     })
-      .then(response => response.result);
+      .then(response => response.body);
   });
   return Promise.all(promises);
 }
@@ -130,9 +136,9 @@ describe('Category', () => {
         //     id: 'BkhfCwRw'
         //   }
         // }
-        expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
-        expect(response.result.category).to.be.an.instanceof(Object);
-        const category = response.result.category;
+        expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
+        expect(response.body.category).to.be.an.instanceof(Object);
+        const category = response.body.category;
         expect(category.id).to.be.a.string();
         expect(category.parent).to.be.a.string().and.to.equal('ROOT');
         expect(category.level).to.be.a.number().and.to.equal(2);
@@ -180,9 +186,9 @@ describe('Category', () => {
         //     { id: 'tech', description: 'Technology', type: 'STRING', mandatory: true }
         //   ]
         // }
-        expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
-        expect(response.result.category).to.be.an.instanceof(Object);
-        const category = response.result.category;
+        expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
+        expect(response.body.category).to.be.an.instanceof(Object);
+        const category = response.body.category;
         expect(category.id).to.be.a.string();
         expect(category.parent).to.be.a.string().and.to.equal('ROOT');
         expect(category.level).to.be.a.number().and.to.equal(2);
@@ -206,14 +212,14 @@ describe('Category', () => {
     };
     callService(options)
       .then(createdResponse => {
-        expect(createdResponse.result.ok).to.be.a.boolean().and.to.equal(true);
-        const createdCategory = createdResponse.result.category;
+        expect(createdResponse.body.ok).to.be.a.boolean().and.to.equal(true);
+        const createdCategory = createdResponse.body.category;
         callService({ url: `/services/catalog/v1/category.info?id=${createdCategory.id}` })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
-            expect(response.result.category).to.be.an.instanceof(Object);
-            const category = response.result.category;
+            expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
+            expect(response.body.category).to.be.an.instanceof(Object);
+            const category = response.body.category;
             expect(category.id).to.be.a.string().and.equal(createdCategory.id);
             expect(category.title).to.be.a.string().and.to.equal(payload.title);
             expect(category.description).to.be.a.string().and.to.equal(payload.description);
@@ -240,8 +246,8 @@ describe('Category', () => {
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
-            const categories = response.result.data;
+            expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
+            const categories = response.body.data;
             expect(categories).to.be.a.array().and.to.have.length(1);
             const category = categories[0];
             expect(category.title).to.be.a.string().and.to.equal(`${categoryTemplate.title} 1`);
@@ -261,7 +267,7 @@ describe('Category', () => {
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
+            expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
             done();
           });
       })
@@ -283,8 +289,8 @@ describe('Category', () => {
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
-            const category = response.result.category;
+            expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
+            const category = response.body.category;
             expect(category.title).to.be.a.string().and.to.equal(payload.title);
             expect(category.parent).to.be.a.string().and.to.equal(payload.parent);
             expect(category.level).to.be.a.number().and.to.equal(3);
@@ -309,8 +315,8 @@ describe('Category', () => {
         })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
-            const category = response.result.category;
+            expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
+            const category = response.body.category;
             expect(category.parent).to.be.a.string().and.to.equal(payload.parent);
             return callService({
               method: 'GET',
@@ -319,8 +325,8 @@ describe('Category', () => {
           })
           .then(response => {
             expect(response.statusCode).to.equal(200);
-            expect(response.result.ok).to.be.a.boolean().and.to.equal(true);
-            const level1 = response.result.category.children;
+            expect(response.body.ok).to.be.a.boolean().and.to.equal(true);
+            const level1 = response.body.category.children;
             expect(level1).to.be.a.array().and.to.have.length(q - 1);
             const pos = level1.findIndex((cat) => cat.id === cats[0].category.id);
             const level2 = level1[pos].children;
