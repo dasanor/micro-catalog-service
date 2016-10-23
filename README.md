@@ -208,3 +208,7 @@ navigation when the user search Products.
 
 The system uses [elasticsearch](https://www.elastic.co/products/elasticsearch) 
 to index and search Products.
+
+# API
+
+The full API documentation can be accessed in the microbase web http://docs.microbase.io
