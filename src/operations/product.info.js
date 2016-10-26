@@ -29,6 +29,7 @@ function opFactory(base) {
       name: 'products',
       keyGenerator: payload => payload.id
     },
+    transports: ['http', 'amqp'],
     handler: (params, reply) => {
       // Filter fields
       let fields;
