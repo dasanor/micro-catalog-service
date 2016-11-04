@@ -11,7 +11,7 @@ function jobFactory(base) {
   if (base.search) {
     base.logger.info('[products] activating indexing');
     base.bus.subscribe(`${productsChannel}.*`, (msg) => {
-      base.workers.enqueue('indexProduct', msg);
+      base.workers.enqueue('indexProduct', msg.json);
     });
   }
 

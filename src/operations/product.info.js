@@ -13,7 +13,7 @@ function opFactory(base) {
   const productsChannel = base.config.get('bus:channels:products:name');
 
   // Listen to Product changes to clear the cache
-  base.bus.subscribe(`${productsChannel}.*`, ({ type, data }) => {
+  base.bus.subscribe(`${productsChannel}.*`, ({ json: { type, data } }) => {
     if (type !== 'UPDATE' && type !== 'REMOVE') return;
     const cache = base.cache.get('products');
     cache.drop(data.old.id);
@@ -29,7 +29,6 @@ function opFactory(base) {
       name: 'products',
       keyGenerator: payload => payload.id
     },
-    transports: ['http', 'amqp'],
     handler: (params, reply) => {
       // Filter fields
       let fields;
