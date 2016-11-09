@@ -61,7 +61,7 @@ function modelFactory(base) {
     title: { type: String, required: true },
     description: { type: String, required: false },
     brand: { type: String, required: false },
-    categories: [{ type: String, required: true }],
+    categories: [{ type: String, ref: 'Category' }],
     price: { type: Number, required: true },
     salePrice: { type: Number, required: false },
     isNetPrice: { type: Boolean, required: true, default: false },

@@ -74,9 +74,46 @@ function opFactory(base) {
       // Exec the query
       query.exec()
         .then(products => {
+          return products.map(p => p.toClient());
+        })
+        .then(products => {
+          if (params.categoryPaths) {
+            // Aggregate all category Ids
+            const categoryIds = new Set();
+            products.forEach(product => {
+              product.categories.forEach(categoryId => {
+                categoryIds.add(categoryId);
+              });
+            });
+            const catFilter = { _id: { $in: Array.from(categoryIds) } };
+            const catFields = 'path';
+            // Get categories and add the path to the products
+            return base.db.models.Category
+              .find(catFilter, catFields)
+              .lean()
+              .then(categories => {
+                const categoryPaths = categories.reduce((result, cat) => {
+                  result[cat._id] = cat.path;
+                  return result;
+                }, {});
+                products.forEach(product => {
+                  product.categories.forEach(categoryId => {
+                    product.categoryPaths = product.categoryPaths || {};
+                    product.categoryPaths[categoryId] = categoryPaths[categoryId];
+                  });
+                });
+                return products;
+              })
+              .catch(error => {
+                throw error;
+              });
+          }
+          return products;
+        })
+        .then(products => {
           return reply(base.utils.genericResponse({
             page: { limit, skip },
-            data: products.map(p => p.toClient())
+            data: products
           }));
 
         })
