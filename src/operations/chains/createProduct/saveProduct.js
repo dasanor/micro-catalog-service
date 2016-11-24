@@ -21,7 +21,7 @@ function factory(base) {
       product.base = context.newData.base;
       product.variations = context.newData.variations;
       product.type = base.db.models.Product.TYPE.VARIANT;
-    } else if (context.newData.modifiers.length > 0) {
+    } else if (context.newData.modifiers && context.newData.modifiers.length > 0) {
       product.modifiers = context.newData.modifiers;
       product.type = base.db.models.Product.TYPE.BASE;
     } else {
