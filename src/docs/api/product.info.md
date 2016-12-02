@@ -65,3 +65,15 @@ curl --request GET \
   --header 'accept: application/json' \
   --header 'content-type: application/json'
 ```
+
+# Events
+
+A Product view fires a `VIEWED` event in the `PRODUCTS` channel.
+
+## Payload
+
+Property | Description
+---------|------------
+date      | The event date
+productId | The id of the Product accessed
+userId    | The id of the User that accessed the Product

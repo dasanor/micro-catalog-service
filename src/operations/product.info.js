@@ -22,6 +22,15 @@ function opFactory(base) {
   });
 
   const op = {
+    eventEmitter: {
+      channel: `${productsChannel}.VIEWED`,
+      filter: (params) => params.userId,
+      payload: (params) => ({
+        date: new Date(),
+        productId: params.id,
+        userId: params.userId
+      })
+    },
     cache: {
       options: {
         expiresIn: base.config.get('cache:products')
