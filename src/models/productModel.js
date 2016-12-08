@@ -1,7 +1,8 @@
 const shortId = require('shortid');
 
-function modelFactory(base) {
-  if (base.logger.isDebugEnabled()) base.logger.debug('[db] registering model Product');
+function modelFactory(base, configKeys) {
+  const modelName = configKeys[configKeys.length - 1];
+  if (base.logger.isDebugEnabled()) base.logger.debug(`[db] registering model '${modelName}'`);
 
   const STOCKSTATUS = {
     NORMAL: 0,
@@ -110,7 +111,7 @@ function modelFactory(base) {
 
   schema.index({ sku: 1 }, { unique: true });
 
-  const model = base.db.model('Product', schema);
+  const model = base.db.model(modelName, schema);
   model.STOCKSTATUS = STOCKSTATUS;
   model.STATUS = STATUS;
   model.TYPE = TYPE;

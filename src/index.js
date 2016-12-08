@@ -1,8 +1,7 @@
 const base = require('microbase')();
 
 // Register model(s)
-require(base.config.get('models:productModel'))(base);
-require(base.config.get('models:categoryModel'))(base);
+base.utils.loadModulesFromKey('models');
 
 // Add Operations
 base.services.addOperationsFromFolder('operations');

@@ -5,8 +5,8 @@
     "style": "RPC"
   },
   "models": {
-    "productModel": "./models/productModel",
-    "categoryModel": "./models/categoryModel"
+    "Product": "./models/productModel",
+    "Category": "./models/categoryModel"
   },
   "createProductChain": {
     "checkCategories": "./operations/chains/createProduct/checkCategories",
