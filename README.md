@@ -18,7 +18,7 @@ ecosystem.
 
 Items you could add to the Cart.
 
-```javascript
+```json
 { 
     "id" : "HJ4g4fACrH", 
     "base" : "SJ64fAAHH", 
@@ -26,8 +26,13 @@ Items you could add to the Cart.
     "title" : "Gel Noosa Tri 11", 
     "description" : "A long description for this shoes", 
     "brand" : "Asics", 
-    "price" : 119.95, 
-    "salePrice" : 99.95, 
+    "prices" : [
+      {
+        "amount": 119.95,
+        "currency": "EUR",
+        "country": "DK"  
+      } 
+    ],
     "isNetPrice" : false, 
     "taxCode" : "default", 
     "status" : "ONLINE", 
@@ -50,7 +55,7 @@ Items you could add to the Cart.
 
 The Categories allows the Product organization in an hierarchically way. 
 
-```javascript
+```json
 { 
     "id" : "B1-Zr45Br", 
     "path" : "ROOT.rJWB4cSr.Bkx-rNcHH.B1-Zr45Br", 
@@ -111,18 +116,18 @@ ROOT
 
 ## Base example
 
-```javascript
+```json
 {
-  sku: '0001',
-  title: 'Very nice shoe',
-  modifiers: [
-    'color',
-    'size'
+  "sku": "0001",
+  "title": "Very nice shoe",
+  "modifiers": [
+    "color",
+    "size"
   ],
-  variants: [
-    '10001',
-    '10002',
-    '10003'
+  "variants": [
+    "10001",
+    "10002",
+    "10003"
   ]
 }
 ```
@@ -134,37 +139,40 @@ ROOT
   
 ## Variant example
 
-```javascript
+```json
 {
-  sku: '1001',
-  title: 'Very nice blue shoes',
-  base: '0001'
-  variations: [
-    {id: 'color', value: 'Blue'},
-    {id: 'size', value: '15'}
+  "sku": "1001",
+  "title": "Very nice blue shoes",
+  "base": "0001",
+  "variations": [
+    {"id": "color", "value": "Blue"},
+    {"id": "size", "value": "15"}
   ]
 }
+```
 
+```json
 {
-  sku: '1002',
-  title: 'Very nice green shoes',
-  base: '0001'
-  variations: [
-    {id: 'color', value: 'Green'},
-    {id: 'size', value: '15'}
+  "sku": "1002",
+  "title": "Very nice green shoes",
+  "base": "0001",
+  "variations": [
+    {"id": "color", "value": "Green"},
+    {"id": "size", "value": "15"}
   ]
 }
+```
 
+```json
 {
-  sku: '1002',
-  title: 'Very nice green big shoes',
-  base: '0001'
-  variations: [
-    {id: 'color', value: 'Green'},
-    {id: 'size', value: '25'}
+  "sku": "1002",
+  "title": "Very nice green big shoes",
+  "base": "0001",
+  "variations": [
+    {"id": "color", "value": "Green"},
+    {"id": "size", "value": "25"}
   ]
 }
-
 ```
 
 # Classifications
@@ -177,29 +185,29 @@ navigation when the user search Products.
  
 ## Category example
 
-```javascript
+```json
 { 
-  id: 'C1', 
-  title: 'Sports Shoes', 
-  classifications: [
-    {id: 'color', description: 'Color', type: 'STRING', mandatory: false}, 
-    {id: 'genre', description: 'Female/Male/Kids', type: 'STRING', mandatory: true}, 
-    {id: 'footprint', description: 'Motion mechanics', type: 'STRING', mandatory: false} 
+  "id": "C1", 
+  "title": "Sports Shoes", 
+  "classifications": [
+    {"id": "color", "description": "Color", "type": "STRING", "mandatory": false}, 
+    {"id": "genre", "description": "Female/Male/Kids", "type": "STRING", "mandatory": true}, 
+    {"id": "footprint", "description": "Motion mechanics", "type": "STRING", "mandatory": false} 
   ] 
 }
 ```
 
 ## Product with Classifications example
 
-```javascript
+```json
 {
-  sku: '2001',
-  title: 'Very nice running shoes',
-  categories:[ 'C1' ]
-  classifications: [
-    {id: 'color', value: 'Blue'},
-    {id: 'genre', value: 'Kids'},
-    {id: 'footprint', value: 'Supinator'}
+  "sku": "2001",
+  "title": "Very nice running shoes",
+  "categories":[ "C1" ]
+  "classifications": [
+    {"id": "color", "value": "Blue"},
+    {"id": "genre", "value": "Kids"},
+    {"id": "footprint", "value": "Supinator"}
   ]
 }
 ```

@@ -9,6 +9,7 @@
     "Category": "./models/categoryModel"
   },
   "createProductChain": {
+    "checkPrices": "./operations/chains/createProduct/checkPrices",
     "checkCategories": "./operations/chains/createProduct/checkCategories",
     "checkClassifications": "./operations/chains/createProduct/checkClassifications",
     "checkVariants": "./operations/chains/createProduct/checkVariants",
@@ -17,6 +18,7 @@
   },
   "updateProductChain": {
     "getProduct": "./operations/chains/updateProduct/getProduct",
+    "checkPrices": "./operations/chains/createProduct/checkPrices",
     "checkCategories": "./operations/chains/createProduct/checkCategories",
     "checkClassifications": "./operations/chains/createProduct/checkClassifications",
     "checkVariants": "./operations/chains/createProduct/checkVariants",
