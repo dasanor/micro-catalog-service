@@ -4,7 +4,6 @@ const isoCountries = require('i18n-iso-countries');
 
 function factory(base) {
   return (context, next) => {
-    console.log(context.newData);
     for (const price of context.newData.prices) {
       if (!price.amount || price.amount < 0) {
         return next(base.utils.Error('price_invalid', price.amount));
