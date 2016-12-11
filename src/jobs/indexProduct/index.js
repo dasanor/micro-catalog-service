@@ -34,8 +34,7 @@ function jobFactory(base) {
             result[k.id] = k.value;
             return result;
           }, {}),
-          price: data.new.price,
-          salePrice: data.new.salePrice,
+          prices: data.new.prices,
           medias: data.new.medias,
           base: data.new.base,
           variations: data.new.variations

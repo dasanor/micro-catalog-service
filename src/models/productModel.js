@@ -39,13 +39,21 @@ function modelFactory(base, configKeys) {
     url: { type: String, required: true }
   }, { _id: false });
 
+  // Price Schema
+  const priceSchema = base.db.Schema({
+    id: { type: String, required: true, default: shortId.generate },
+    amount: { type: Number, required: true },
+    currency: { type: String, required: true }, // ISO 4217
+    country: { type: String, required: false }, // ISO 3166-1 alpha-2
+    customerType: { type: String, required: false },
+    channel: { type: String, required: false },
+    validFrom: { type: Date, required: false },
+    validUntil: { type: Date, required: false }
+  }, { _id: false });
+
   // The root schema
   const schema = base.db.Schema({
-    _id: {
-      type: String, required: true, default: function () {
-        return shortId.generate();
-      }
-    },
+    _id: { type: String, required: true, default: shortId.generate },
     sku: { type: String, required: true },
     status: {
       type: String,
@@ -63,8 +71,7 @@ function modelFactory(base, configKeys) {
     description: { type: String, required: false },
     brand: { type: String, required: false },
     categories: [{ type: String, ref: 'Category' }],
-    price: { type: Number, required: true },
-    salePrice: { type: Number, required: false },
+    prices: [priceSchema],
     isNetPrice: { type: Boolean, required: true, default: false },
     stockStatus: {
       type: Number,
@@ -128,8 +135,7 @@ function modelFactory(base, configKeys) {
     'stockStatus',
     'base',
     'categories',
-    'price',
-    'salePrice',
+    'prices',
     'isNetPrice',
     'medias',
     'classifications',
@@ -149,8 +155,7 @@ function modelFactory(base, configKeys) {
     'stockStatus',
     'base',
     'categories',
-    'price',
-    'salePrice',
+    'prices',
     'isNetPrice',
     'medias',
     'classifications',

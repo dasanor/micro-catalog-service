@@ -9,19 +9,25 @@ follows the [MicroBase API calling conventions](../calling-conventions.html).
 
 Argument | Required | Type | Example | Description
 ---------|----------|------|---------|------------
-token         | yes | Token  | Bearer xxxxx...    | Authentication token.
-id            | no  | String List | HJ4g4fACrH         | Comma separated Products ids list.
-sku           | no  | String List | A00123321,A8778122 | Comma separated skus list.
-title         | no  | String      | shoe               | Title /${title}/i regex expression.
-description   | no  | String      | flexible shoe      | Description /${description}/i regex expression.
-status        | no  | String List | ONLINE             | Comma separated status list.
-brand         | no  | String      | Asics              | Brand /${brand}/i regex expression.
-taxCode       | no  | String List | default,vat7       | Comma separated taxCodes list.
-stockStatus   | no  | String      | 0,1                | Comma separated stockStatus list.
-isNetPrice    | no  | Boolean     | true               | Net/Gross price.
-base          | no  | String List | Ji4g3fACrH         | Comma separaded Product ids list.
-categories    | no  | String List | SkeZVQsV, BJ4SBQsE | Comma separaded Categories ids list.
-fields        | no  | String List | title,price        | Comma separated field list to return.
+token           | yes | Token  | Bearer xxxxx...    | Authentication token.
+id              | no  | String List | HJ4g4fACrH         | Comma separated Products ids list.
+sku             | no  | String List | A00123321,A8778122 | Comma separated skus list.
+title           | no  | String      | shoe               | Title /${title}/i regex expression.
+description     | no  | String      | flexible shoe      | Description /${description}/i regex expression.
+status          | no  | String List | ONLINE             | Comma separated status list.
+brand           | no  | String      | Asics              | Brand /${brand}/i regex expression.
+taxCode         | no  | String List | default,vat7       | Comma separated taxCodes list.
+stockStatus     | no  | String      | 0,1                | Comma separated stockStatus list.
+isNetPrice      | no  | Boolean     | true               | Net/Gross price.
+base            | no  | String List | Ji4g3fACrH         | Comma separaded Product ids list.
+categories      | no  | String List | SkeZVQsV, BJ4SBQsE | Comma separaded Categories ids list.
+prices.id       | no  | String      | BygVL5CF7x         | Comma separaded price ids list.
+prices.currency | no  | String      | USD                | Comma separaded currencies list.
+prices.country  | no  | String      | US                 | Comma separaded countries list.
+medias.id       | no  | String      | 100x100            | Comma separaded medias list.
+medias.customerType | no | String   | B2C                | Comma separaded Customer types list.
+medias.channel  | no  | String      | WEB                | Comma separaded channels list.
+fields          | no  | String List | title,price        | Comma separated field list to return.
 
 # Response
 

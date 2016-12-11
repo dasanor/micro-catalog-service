@@ -17,34 +17,39 @@ fields | no  | String | sku,title,brand | Comma separated field list to return.
 
 Returns a Product object:
 
-```javascript
+```json
 {
-    "ok": true,
-    "product": { 
-       "id" : "HJ4g4fACrH", 
-       "base" : "SJ64fAAHH", 
-       "sku" : "001017730838228085", 
-       "title" : "Gel Noosa Tri 11", 
-       "description" : "A long description for this shoes", 
-       "brand" : "Asics", 
-       "price" : 119.95, 
-       "salePrice" : 99.95, 
-       "isNetPrice" : false, 
-       "taxCode" : "default", 
-       "status" : "ONLINE", 
-       "stockStatus" : 0,
-       "classifications" : [
-           { "id" : "color", "value" : "Multicolor" }, 
-           { "id" : "genre", "value" : "hombre" }
-       ], 
-       "medias" : [
-           {"id": "100x100", "url": "http://placehold.it/100x100"},
-           {"id": "350x150", "url": "http://placehold.it/350x150"}    
-       ], 
-       "categories" : [
-           "B1-Zr45Br"
-       ] 
-   }
+  "ok": true,
+  "product": { 
+    "id" : "HJ4g4fACrH", 
+    "base" : "SJ64fAAHH", 
+    "sku" : "001017730838228085", 
+    "title" : "Gel Noosa Tri 11", 
+    "description" : "A long description for this shoes", 
+    "brand" : "Asics", 
+    "prices" : [
+     {
+       "amount": 119.95,
+       "currency": "EUR",
+       "country": "DK"  
+     } 
+    ],
+    "isNetPrice" : false, 
+    "taxCode" : "default", 
+    "status" : "ONLINE", 
+    "stockStatus" : 0,
+    "classifications" : [
+       { "id" : "color", "value" : "Multicolor" }, 
+       { "id" : "genre", "value" : "hombre" }
+    ], 
+    "medias" : [
+       {"id": "100x100", "url": "http://placehold.it/100x100"},
+       {"id": "350x150", "url": "http://placehold.it/350x150"}    
+    ], 
+    "categories" : [
+       "B1-Zr45Br"
+    ] 
+  }
 }
 ```
 

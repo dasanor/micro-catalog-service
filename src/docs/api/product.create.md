@@ -15,9 +15,8 @@ status          | yes | String      | DRAFT | Status of the Product [ONLINE, DRA
 title           | yes | String      | Two sided frigo | Product title to show in the store.
 description     | no  | String      | Long description for this product | Product description. 
 brand           | no  | String      | LG    | The Product Brand.
-categories      | yes | String List | ['001', '002'] | A list of categories the Product belongs to. 
-price           | yes | String      | 10.99 | The Product base price.
-salePrice       | no  | Number      | 9.99  | The Product sale price.
+categories      | yes | String List | ['001', '002'] | A list of Category IDs the Product belongs to. 
+prices          | no  | Object List | [{"amount": 119.95,"currency": "EUR"}] | A list of prices.
 isNetPrice      | no  | Boolean     | true  | Defines the price as Net of Gross. Defaults to false.
 stockStatus     | yes | Number      | 0     | [0/1/2] (0: NORMAL, 1:UNLIMITED, 2:DISCONTINUED)
 medias          | no  | Object List | [{id: '100x100', url: 'http:\/\/placehold.it/100x100'}] | List of urls pointing to images. 
@@ -27,38 +26,94 @@ variations      | no  | Object List | [{id: 'color', value: 'Blue'}, {id: 'size'
 modifiers       | no  | Object List | [{'color', 'size'}] | In a Base Product, a list of product modifiers.
 taxCode         | no  | String      | vat-7 | Tax code applicable to this product. Defaults to 'default'.   
 
+## Prices
+
+Argument | Required | Type | Example | Description
+---------|----------|------|---------|------------
+amount       | yes | Numeric | 109.99 | The Product base price
+currency     | yes | String  | USD | The currency code (ISO 4217)
+country      | no  | String  | US  | The country code (ISO 3166-1 alpha-2)
+customerType | no  | String  | VIP | The Customer type (VIP, B2B, B2C)
+channel      | no  | String  | WEB | The channel the Customer is using (WEB, MOBILE, Physical store ID)
+validFrom    | no  | Date    | 2016-01-01T00:00:00.000+0000 | Date start (inclusive) for the validy period of this Price.
+validUntil   | no  | Date    | 2017-12-31T23:59:59.000+0000 | Date end (inclusive) for the validy period of this Price.
+
+## Medias
+
+A list of image urls for this Product.
+
+Argument | Required | Type | Example | Description
+---------|----------|------|---------|------------
+id  | yes | String | 100x100 | An object identifier.
+url | yes | String | http:\/\/placehold.it/100x100 | The media url.
+
+## Classifications
+
+If the prduct belongs to a Category with classifications, the Product `classifications` field should 
+contain the classification values for the classifications defined in the Category.
+
+Argument | Required | Type | Example | Description
+---------|----------|------|---------|------------
+id    | yes | String | color | An object identifier.
+value | yes | String | Grey | The classification value.
+
+## Modifiers
+
+If the prduct is a Base Product, the `modifiers` field contains the name of the modifiers the Variant 
+Products should have in the `variations` field.
+
+Argument | Required | Type | Example | Description
+---------|----------|------|---------|------------
+id    | yes | String | color | An object identifier.
+value | yes | String | Grey | The classification value.
+
+## Variations
+
+If the prduct is a Variation Product, the `variations` field contains the values for the Base Product 
+`modifiers`.
+
+Argument | Required | Type | Example | Description
+---------|----------|------|---------|------------
+id    | yes | String | color | An object identifier.
+value | yes | String | Blue | The Variation value.
+
 # Response
 
 Returns a Product object:
 
-```javascript
+```json
 {
-    "ok": true,
-    "product": { 
-       "id" : "HJ4g4fACrH", 
-       "base" : "SJ64fAAHH", 
-       "sku" : "001017730838228085", 
-       "title" : "Gel Noosa Tri 11", 
-       "description" : "A long description for this shoes", 
-       "brand" : "Asics", 
-       "price" : 119.95, 
-       "salePrice" : 99.95, 
-       "isNetPrice" : false, 
-       "taxCode" : "default", 
-       "status" : "ONLINE", 
-       "stockStatus" : 0,
-       "classifications" : [
-           { "id" : "color", "value" : "Multicolor" }, 
-           { "id" : "genre", "value" : "hombre" }
-       ], 
-       "medias" : [
-           {"id": "100x100", "url": "http://placehold.it/100x100"},
-           {"id": "350x150", "url": "http://placehold.it/350x150"}    
-       ], 
-       "categories" : [
-           "B1-Zr45Br"
-       ] 
-   }
+  "ok": true,
+  "product": { 
+    "id" : "HJ4g4fACrH", 
+    "base" : "SJ64fAAHH", 
+    "sku" : "001017730838228085", 
+    "title" : "Gel Noosa Tri 11", 
+    "description" : "A long description for this shoes", 
+    "brand" : "Asics", 
+    "prices" : [
+      {
+       "amount": 119.95,
+       "currency": "EUR",
+       "country": "DK"  
+      } 
+    ],
+    "isNetPrice" : false, 
+    "taxCode" : "default", 
+    "status" : "ONLINE", 
+    "stockStatus" : 0,
+    "classifications" : [
+      { "id" : "color", "value" : "Multicolor" }, 
+      { "id" : "genre", "value" : "hombre" }
+    ], 
+    "medias" : [
+      {"id": "100x100", "url": "http://placehold.it/100x100"},
+      {"id": "350x150", "url": "http://placehold.it/350x150"}    
+    ], 
+    "categories" : [
+      "B1-Zr45Br"
+    ] 
+  }
 }
 ```
 
@@ -80,6 +135,10 @@ base_product_not_found | The Product id not found | The Base product was not fou
 variation_data_not_found | The modifier name not found | The Variant must have the modifier value (a variation)
 no_modifiers_found | - | A Base Product must provide at least one modifier
 variant_not_found | The Variant id not found | The Variant product was not found
+price_invalid | The invalid price | The price is < 0.00
+price_currency_invalid | The invalid currency | The currency is not part of the ISO 4217
+price_country_invalid | The invalid country | The country is not part of the ISO 3166-1 alpha-2
+price_valid_dates | The invalid date/s | The dates are invalid (ie: The until date is before the from date) 
 
 # Example
 
@@ -90,7 +149,7 @@ curl --request POST \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
   --data '{"sku": "0006", "title": "Product 001 title", 
-           "description": "Product 001 description", "price": 100.00}'
+           "description": "Product 001 description", "price": [{"amount": 119.95,"currency": "EUR"}]}'
 ```
 
 # Events

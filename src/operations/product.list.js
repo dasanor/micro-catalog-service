@@ -26,7 +26,13 @@ function opFactory(base) {
     stockStatus: inExpression,
     isNetPrice: equalExpression,
     base: inExpression,
-    categories: inExpression
+    categories: inExpression,
+    'prices.id': inExpression,
+    'prices.currency': inExpression,
+    'prices.country': inExpression,
+    'prices.customerType': inExpression,
+    'prices.channel': inExpression,
+    'medias.id': inExpression
   };
   const selectableFields = base.db.models.Product.selectableFields;
   const defaultFields = selectableFields.join(' ');
@@ -36,7 +42,6 @@ function opFactory(base) {
 
   const op = {
     handler: (params, reply) => {
-
       // Filters
       const filters = allowedProperties
         .filter(k => params.hasOwnProperty(k))
@@ -45,7 +50,6 @@ function opFactory(base) {
           result[field] = filterExpressions[k](params[k]);
           return result;
         }, {});
-
       // Pagination
       let limit = +params.limit || defaultLimit;
       if (limit > maxLimit) limit = maxLimit;

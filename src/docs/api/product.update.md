@@ -27,8 +27,7 @@ taxCode |
 stockStatus |
 base |
 categories |
-price |
-salePrice |
+prices |
 isNetPrice |
 medias |
 classifications |
@@ -40,33 +39,40 @@ variations |
 
 Returns a Product object:
 
-```javascript
-    "ok": true,
-    "product": { 
-       "id" : "HJ4g4fACrH", 
-       "base" : "SJ64fAAHH", 
-       "sku" : "001017730838228085", 
-       "title" : "Gel Noosa Tri 11", 
-       "description" : "A long description for this shoes", 
-       "brand" : "Asics", 
-       "price" : 119.95, 
-       "salePrice" : 99.95, 
-       "isNetPrice" : false, 
-       "taxCode" : "default", 
-       "status" : "ONLINE", 
-       "stockStatus" : 0,
-       "classifications" : [
-           { "id" : "color", "value" : "Multicolor" }, 
-           { "id" : "genre", "value" : "hombre" }
-       ], 
-       "medias" : [
-           {"id": "100x100", "url": "http://placehold.it/100x100"},
-           {"id": "350x150", "url": "http://placehold.it/350x150"}    
-       ], 
-       "categories" : [
-           "B1-Zr45Br"
-       ] 
-   }
+```json
+{
+  "ok": true,
+  "product": { 
+    "id" : "HJ4g4fACrH", 
+    "base" : "SJ64fAAHH", 
+    "sku" : "001017730838228085", 
+    "title" : "Gel Noosa Tri 11", 
+    "description" : "A long description for this shoes", 
+    "brand" : "Asics", 
+    "prices" : [
+      {
+       "amount": 119.95,
+       "currency": "EUR",
+       "country": "DK"  
+      } 
+    ],
+    "isNetPrice" : false, 
+    "taxCode" : "default", 
+    "status" : "ONLINE", 
+    "stockStatus" : 0,
+    "classifications" : [
+      { "id" : "color", "value" : "Multicolor" }, 
+      { "id" : "genre", "value" : "hombre" }
+    ], 
+    "medias" : [
+      {"id": "100x100", "url": "http://placehold.it/100x100"},
+      {"id": "350x150", "url": "http://placehold.it/350x150"}    
+    ], 
+    "categories" : [
+      "B1-Zr45Br"
+    ] 
+  }
+}
 ```
 
 # Errors
@@ -88,6 +94,10 @@ variation_data_not_found | The modifier name not found | The Variant must have t
 no_modifiers_found | - | A Base Product must provide at least one modifier
 variant_not_found | The Variant id not found | The Variant product was not found
 product_not_saved | - | The product was not updated
+price_invalid | The invalid price | The price is < 0.00
+price_currency_invalid | The invalid currency | The currency is not part of the ISO 4217
+price_country_invalid | The invalid country | The country is not part of the ISO 3166-1 alpha-2
+price_valid_dates | The invalid date/s | The dates are invalid (ie: The until date is before the from date) 
 
 # Example
 
@@ -97,7 +107,7 @@ curl --request POST \
   --header 'authorization: Bearer xxxxx...' \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
-  --data '{"title": "CGel Noosa Tri 11 by Asics", salePrice: 95.99}'
+  --data '{"title": "CGel Noosa Tri 11 by Asics", "prices": [{"amount": 119.95,"currency": "EUR"}]}'
 ```
 
 # Events
