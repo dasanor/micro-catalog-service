@@ -1,5 +1,3 @@
-const shortId = require('shortid');
-
 const Code = require('code');
 const Lab = require('lab');
 const nock = require('nock');
