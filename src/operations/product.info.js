@@ -24,11 +24,11 @@ function opFactory(base) {
   const op = {
     eventEmitter: {
       channel: `${productsChannel}.VIEWED`,
-      filter: (params) => params.userId,
+      filter: (params) => params.customerId,
       payload: (params) => ({
         date: new Date(),
         productId: params.id,
-        userId: params.userId
+        customerId: params.customerId
       })
     },
     cache: {
