@@ -4,7 +4,7 @@ This method is used to remove a Category
 
 # Arguments
 
-This method has the URL https://server/services/catalog/v1/category.create and 
+This method has the URL https://server/services/catalog/v1/category.remove and 
 follows the [MicroBase API calling conventions](../calling-conventions.html).
 
 Argument | Required | Type | Example | Description
