@@ -27,7 +27,7 @@
   "dependencies": {
     "currency-format": "^1.0.6",
     "i18n-iso-countries": "^1.8.0",
-    "microbase": "0.9.0",
+    "microbase": "^0.9.0",
     "moment": "^2.17.1",
     "mongoose-path-tree": "^1.3.5",
     "shortid": "^2.2.6",
