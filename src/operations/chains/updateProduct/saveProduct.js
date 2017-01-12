@@ -11,7 +11,7 @@ function factory(base) {
     // Update type
     if (update.base || context.oldProduct.base) {
       update.type = base.db.models.Product.TYPE.VARIANT;
-    } else if (update.modifiers.length > 0 || context.oldProduct.length > 0) {
+    } else if ((update.modifiers && update.modifiers.length > 0) || context.oldProduct.length > 0) {
       update.type = base.db.models.Product.TYPE.BASE;
     } else {
       update.type = base.db.models.Product.TYPE.SIMPLE;
