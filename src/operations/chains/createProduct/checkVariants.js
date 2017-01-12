@@ -8,7 +8,7 @@ function factory(base) {
     // A Variant must have both base and variations
     if ((context.newData.base && !context.newData.variations)
       || context.newData.variations && !context.newData.base) {
-      return next(base.utils.Error('inconsistent_base_variantions_data'));
+      return next(base.utils.Error('inconsistent_base_variations_data'));
     }
 
     if (context.newData.base) {

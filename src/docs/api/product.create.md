@@ -23,7 +23,7 @@ medias          | no  | Object List | [{id: '100x100', url: 'http:\/\/placehold.
 classifications | no  | Object List | [{id: 'color', value: 'Grey'}] | If the Product belogs to a Category with classifications, a list of classification values.
 base            | no  | String      | HJ4g4fACrH | In a Variant Product, the Parent Product id.
 variations      | no  | Object List | [{id: 'color', value: 'Blue'}, {id: 'size', value: '15'}]  | In a Variant Product, the value of the modifiers. 
-modifiers       | no  | Object List | [{'color', 'size'}] | In a Base Product, a list of product modifiers.
+modifiers       | no  | Object List | ['color', 'size'] | In a Base Product, a list of product modifiers.
 taxCode         | no  | String      | vat-7 | Tax code applicable to this product. Defaults to 'default'.   
 
 ## Prices
@@ -130,7 +130,7 @@ empty_classification_value | The Classification id | The Classification value is
 classification_value_not_a_boolean | The Classification id | The Classification value must be a boolean
 classification_value_not_a_number | The Classification id |  The Classification value must be a number
 inconsistent_base_variants_data | - | A Product must be a Base or a Variant (Cannot mix variants/modifiers with Base product/variations)
-inconsistent_base_variantions_data | - | A Variant must have a Base product and variations data 
+inconsistent_base_variations_data | - | A Variant must have a Base product and variations data
 base_product_not_found | The Product id not found | The Base product was not found 
 variation_data_not_found | The modifier name not found | The Variant must have the modifier value (a variation)
 no_modifiers_found | - | A Base Product must provide at least one modifier

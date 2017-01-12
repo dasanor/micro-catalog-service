@@ -14,7 +14,7 @@ function opFactory(base) {
       base.db.models.Category
         .findOne({ _id: msg.id })
         .then(category => {
-          if (!category) throw base.utils.Error('category_not_found', id);
+          if (!category) throw base.utils.Error('category_not_found', msg.id);
           // Explicitly name allowed updates
           if (msg.title) category.title = msg.title;
           if (msg.description) category.description = msg.description;
