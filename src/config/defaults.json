@@ -5,25 +5,25 @@
     "style": "RPC"
   },
   "models": {
-    "Product": "./models/productModel",
-    "Category": "./models/categoryModel"
+    "Product": "${servicePath}/models/productModel",
+    "Category": "${servicePath}/models/categoryModel"
   },
   "createProductChain": {
-    "checkPrices": "./operations/chains/createProduct/checkPrices",
-    "checkCategories": "./operations/chains/createProduct/checkCategories",
-    "checkClassifications": "./operations/chains/createProduct/checkClassifications",
-    "checkVariants": "./operations/chains/createProduct/checkVariants",
-    "saveProduct": "./operations/chains/createProduct/saveProduct",
-    "postSaveProduct": "./operations/chains/createProduct/postSaveProduct"
+    "checkPrices": "${servicePath}/operations/chains/createProduct/checkPrices",
+    "checkCategories": "${servicePath}/operations/chains/createProduct/checkCategories",
+    "checkClassifications": "${servicePath}/operations/chains/createProduct/checkClassifications",
+    "checkVariants": "${servicePath}/operations/chains/createProduct/checkVariants",
+    "saveProduct": "${servicePath}/operations/chains/createProduct/saveProduct",
+    "postSaveProduct": "${servicePath}/operations/chains/createProduct/postSaveProduct"
   },
   "updateProductChain": {
-    "getProduct": "./operations/chains/updateProduct/getProduct",
-    "checkPrices": "./operations/chains/createProduct/checkPrices",
-    "checkCategories": "./operations/chains/createProduct/checkCategories",
-    "checkClassifications": "./operations/chains/createProduct/checkClassifications",
-    "checkVariants": "./operations/chains/createProduct/checkVariants",
-    "saveProduct": "./operations/chains/updateProduct/saveProduct",
-    "postSaveProduct": "./operations/chains/updateProduct/postSaveProduct"
+    "getProduct": "${servicePath}/operations/chains/updateProduct/getProduct",
+    "checkPrices": "${servicePath}/operations/chains/createProduct/checkPrices",
+    "checkCategories": "${servicePath}/operations/chains/createProduct/checkCategories",
+    "checkClassifications": "${servicePath}/operations/chains/createProduct/checkClassifications",
+    "checkVariants": "${servicePath}/operations/chains/createProduct/checkVariants",
+    "saveProduct": "${servicePath}/operations/chains/updateProduct/saveProduct",
+    "postSaveProduct": "${servicePath}/operations/chains/updateProduct/postSaveProduct"
   },
   "maxCategoriesPerProduct": 5,
   "search": {
