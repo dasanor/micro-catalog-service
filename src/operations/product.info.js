@@ -17,8 +17,8 @@ function opFactory(base) {
     if (type !== 'UPDATE' && type !== 'REMOVE') return;
     const cache = base.cache.get('products');
     cache.drop(data.old.id);
-    if (data.old.base) cache.drop(data.old.base);
-    if (data.new.base && data.new.base !== data.old.base) cache.drop(data.new.base);
+    if (data.old && data.old.base) cache.drop(data.old.base);
+    if (data.new && data.new.base && data.new.base !== data.old.base) cache.drop(data.new.base);
   });
 
   const op = {
